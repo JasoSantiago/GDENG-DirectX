@@ -1,0 +1,3 @@
+﻿  AppWindow.cpp
+C:\Users\Admin\source\repos\directx12setup - Backup\directx12setup\AppWindow.cpp(114,46): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  directx12setup.vcxproj -> C:\Users\Admin\source\repos\directx12setup - Backup\x64\Debug\directx12setup.exe
