@@ -111,8 +111,9 @@ void AppWindow::onUpdate()
 	//m_delta_time = new_time / 1000.0f;
 	//m_old_time = ::GetTickCount();
 
-	m_angle += 2.0f * EngineTime::getDeltaTime();;
-
+	m_delta_time = EngineTime::getDeltaTime();
+	
+	m_angle += 2.0f * m_delta_time;
 	
 
 	constant cc;
