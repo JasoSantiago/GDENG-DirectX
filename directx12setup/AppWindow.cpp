@@ -112,9 +112,15 @@ void AppWindow::onUpdate()
 	//m_old_time = ::GetTickCount();
 
 	m_delta_time = EngineTime::getDeltaTime();
-	
-	m_angle += 2.0f * m_delta_time;
-	
+	if(movement)
+		m_angle +=2.0f * m_delta_time;
+	if (!movement)
+		m_angle -= 2.0f * m_delta_time;
+	if(m_angle > 10.0f || m_angle < 0.0f)
+	{
+		movement = !movement;
+	}
+	std::cout << m_angle<<std::endl;
 
 	constant cc;
 	cc.m_angle = m_angle;
