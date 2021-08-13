@@ -1,5 +1,1 @@
-﻿  AppWindow.cpp
-C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(114,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  main.cpp
-  Generating Code...
-  directx12setup.vcxproj -> C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\x64\Debug\directx12setup.exe
+﻿  directx12setup.vcxproj -> C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\x64\Debug\directx12setup.exe

@@ -1,18 +1,14 @@
 #include "AppWindow.h"
-#include "Windows.h"
-#include <iostream>
-
-
-__declspec(align(16))
-struct constant
-{
-	float m_angle;
-};
+#include <Windows.h>
+#include "Vector3D.h"
+#include "Matrix4x4.h"
+#include "InputSystem.h"
+#include "SceneCameraHandler.h"
 
 AppWindow::AppWindow()
 {
-	m_sound_class = 0;
 }
+
 
 
 AppWindow::~AppWindow()
@@ -21,139 +17,134 @@ AppWindow::~AppWindow()
 
 void AppWindow::onCreate()
 {
-	/*m_sound_class = new SoundClass;
-	if (!m_sound_class)
-	{
-	}
-	if(m_sound_class->Initialize(this->m_hwnd))
-	{
-	}*/
+	std::random_device rd;
+	std::default_random_engine eng(rd());
+	uniform_real_distribution<float> distr(-0.75, 0.75);
+	uniform_real_distribution<float> distr2(-3.75, 3.75);
 	Window::onCreate();
+
+	InputSystem::initialize();
+	SceneCameraHandler::initialize();
 	GraphicsEngine::get()->init();
 	m_swap_chain = GraphicsEngine::get()->createSwapChain();
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
+	m_width = rc.right - rc.left;
+	m_height = rc.bottom - rc.top;
 
-	vertex list[] =
-	{
-		{-0.6f, -0.25f, 0.0f,-0.9f, -0.55f, 0.0f, 1,0,0, 0,1,0},
-		{-0.4f, 0.25f, 0.0f,-0.7f, 0.55f, 0.0f, 0,1,0, 1,1,0},
-		{-0.2f, -0.25f, 0.0f, -0.5f, -0.55f, 0.0f,0,0,1, 1,0,0}
-	};
-
-	vertex quadlist[] =
-	{
-		{0.0f, -0.25f, 0.0f, -0.11f, -0.55f, 0.0f, 1,0,0, 0,1,0}, // bottom right
-		{0.0f, 0.25f, 0.0f,  -0.055f,0.39f,0.0f,0,1,0, 1,1,0}, //upper left
-		{0.25f, -0.25f, 0.0f,  0.345f,-0.38f,0.0f,0,0,1, 1,0,0},// lower left
-		{0.25f, 0.25f, 0.0f,0.44f,0.385f,0.0f, 1,1,0, 0,0,1}//upper right
-	};
-	vertex greenquadlist[] = {
-		{0.26f, -0.25f, 0.0f,0.10f, -0.055f, 0.0f,0,1,0, 1,0,0}, // bottom right
-		{0.26f, 0.25f, 0.0f,0.10f, 0.39f, 0.0f, 0,1,0, 1,0,0}, //upper left
-		{0.5f, -0.25f, 0.0f,0.75f, -0.365f, 0.0f, 0,1,0, 1,0,0},
-		{0.5f, 0.25f, 0.0f,0.75f, 0.335f, 0.0f, 0,1,0, 1,0,0}
-	};
-
-	vertex pardcodequad[]
-	{
-	{-0.5f, -0.5f, 0.0f, -0.32f, -0.11f, 0.0f, 0, 0, 0, 0, 1, 0 },
-	{ -0.5f,0.5f,0.0f,     -0.11f,0.78f,0.0f,    1,1,0,  0,1,1 },
-	{ 0.5f,-0.5f,0.0f,     0.75f,-0.73f,0.0f,   0,0,1,  1,0,0 },
-	{ 0.5f,-0.5f,0.0f,      0.88f,0.77f,0.0f,    1,1,1,  0,0,1 }
-	};
-
-	m_vb = GraphicsEngine::get()->createVertexBuffer();
-	m_qvb = GraphicsEngine::get()->createVertexBuffer();
-	m_qgvb = GraphicsEngine::get()->createVertexBuffer();
-	pc_vb = GraphicsEngine::get()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(list);
-	UINT quad_size_list = ARRAYSIZE(quadlist);
-	UINT quad_green_size = ARRAYSIZE(greenquadlist);
-	UINT pardecode_size_list = ARRAYSIZE(pardcodequad);
+	SceneCameraHandler::getInstance()->getSceneCamera()->setDimensions(m_width, m_height);
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 
-	m_vb->loadQuad(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
-	m_qvb->loadQuad(quadlist, sizeof(vertex), quad_size_list, shader_byte_code, size_shader);
-	m_qgvb->loadQuad(greenquadlist, sizeof(vertex), quad_green_size, shader_byte_code, size_shader);
-	//pc_vb->loadQuad(pardcodequad, sizeof(vertex), pardecode_size_list, shader_byte_code, size_shader);
-	Quad::createQuad(pardcodequad, pc_vb, shader_byte_code, size_shader, pardecode_size_list);
-	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 
-	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
+
+	for (int i = 0; i < 5; i++)
+	{
+		float x = distr(eng);
+		float y = distr(eng);
+		Cube* CubeObject = new Cube("Cube", shader_byte_code, size_shader);
+		CubeObject->setAnimSpeed(distr2(eng));
+		CubeObject->setPosition(x, y, 0.0f);
+		CubeObject->setScale(0.25, 0.25, 0.25);
+		this->Cubelist.push_back(CubeObject);
+
+	}
+
+	this->planeObject = new Plane("Plane", shader_byte_code, size_shader);
+	planeObject->setPosition(0, -0.5, 0.0f);
+	planeObject->setScale(0.5f, 0.5f, 0.5f);
+	m_vb = GraphicsEngine::get()->createVertexBuffer();
 
 	GraphicsEngine::get()->releaseCompiledShader();
 
-	constant cc;
-	cc.m_angle = 0;
-	m_cb = GraphicsEngine::get()->createConstantBuffer();
-	m_cb->load(&cc, sizeof(constant));
+	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->releaseCompiledShader();
+
 
 }
 
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
-	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 0, 0.3f, 0.4f, 1);
-	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-
-	//unsigned long new_time = 0;
-	//if (m_old_time)
-	//	//new_time = ::GetTickCount() - m_old_time;
-	//new_time = 
-	//m_delta_time = new_time / 1000.0f;
-	//m_old_time = ::GetTickCount();
-
-	m_delta_time = EngineTime::getDeltaTime();
-	if(movement)
-		m_angle +=2.0f * m_delta_time;
-	if (!movement)
-		m_angle -= 2.0f * m_delta_time;
-	if(m_angle > 10.0f || m_angle < 0.0f)
-	{
-		movement = !movement;
-	}
-	std::cout << m_angle<<std::endl;
-
-	constant cc;
-	cc.m_angle = m_angle;
-
-	m_cb->update(GraphicsEngine::get()->getImmediateDeviceContext(), &cc);
-
-	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
-
+	InputSystem::getInstance()->update();
+	SceneCameraHandler::getInstance()->update();
+	//CLEAR THE RENDER TARGET
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
+	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
+		0, 0.3f, 0.4f, 1);
+	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
+	RECT rc = this->getClientWindowRect();
+	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
 
-	/*GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertexList(), 0);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_qvb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_qvb->getSizeVertexList(), 0);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_qgvb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_qgvb->getSizeVertexList(), 0);*/
+	planeObject->update(EngineTime::getDeltaTime());
+	planeObject->draw(m_width, m_height, this->m_vs, this->m_ps);
+	
+	for (int i = 0; i < Cubelist.size(); i++)
+	{
+		this->Cubelist[i]->update(EngineTime::getDeltaTime());
+		this->Cubelist[i]->draw(m_width, m_height, this->m_vs, this->m_ps);
+	}
 
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(pc_vb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(pc_vb->getSizeVertexList(), 0);
+	
+
+	// FINALLY DRAW THE TRIANGLE
+
 	m_swap_chain->present(true);
 }
 
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
-	m_vb->release();
+	//m_vb->release();
+	//m_ib->release();
+	//m_cb->release();
 	m_swap_chain->release();
 	m_vs->release();
 	m_ps->release();
-	m_qvb->release();
-	m_qgvb->release();
-	//m_sound_class->release();
 	GraphicsEngine::get()->release();
+}
+
+void AppWindow::onFocus()
+{
+	InputSystem::getInstance()->addListener(this);
+}
+
+void AppWindow::onKillFocus()
+{
+	InputSystem::getInstance()->removeListener(this);
+}
+
+void AppWindow::onKeyDown(int key)
+{
+}
+
+void AppWindow::onKeyUp(int key)
+{
+}
+
+void AppWindow::onMouseMove(const Point& delta_mouse_pos)
+{
+}
+
+void AppWindow::onLeftMouseDown(const Point& mousepos)
+{	
+}
+
+void AppWindow::onLeftMouseUp(const Point& mousepos)
+{
+}
+
+void AppWindow::onRightMouseDown(const Point& mousepos)
+{
+}
+
+void AppWindow::onRightMouseUp(const Point& mousepos)
+{
 }
