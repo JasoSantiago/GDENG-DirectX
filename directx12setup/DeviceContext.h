@@ -20,6 +20,8 @@ public:
 	void drawIndexedTriangleList(UINT index_count, UINT start_vertex_index, UINT start_index_location);
 	void drawTriangleStrip(UINT vertex_count, UINT start_vertex_index);
 
+	ID3D11DeviceContext* getContext();
+	
 	void setViewportSize(UINT width, UINT height);
 
 	void setVertexShader(VertexShader* vertex_shader);

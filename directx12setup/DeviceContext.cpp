@@ -50,6 +50,11 @@ void DeviceContext::drawTriangleStrip(UINT vertex_count, UINT start_vertex_index
 	m_device_context->Draw(vertex_count, start_vertex_index);
 }
 
+ID3D11DeviceContext* DeviceContext::getContext()
+{
+	return this->m_device_context;
+}
+
 void DeviceContext::setViewportSize(UINT width, UINT height)
 {
 	D3D11_VIEWPORT vp = {};

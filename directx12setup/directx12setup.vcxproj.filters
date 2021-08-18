@@ -64,6 +64,36 @@
     <Filter Include="GameEngine\plane">
       <UniqueIdentifier>{39b27fd1-bcf2-4707-99e0-04fafd55b1ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ImGui">
+      <UniqueIdentifier>{73de6fe0-13e4-470d-b4c4-1cd3ecffb0fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI">
+      <UniqueIdentifier>{5e4c6d81-e688-447e-a211-47a19d261299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\InspectorScreen">
+      <UniqueIdentifier>{f6eeb414-4537-46fb-992c-d822f4457bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\MenuScreen">
+      <UniqueIdentifier>{34c143dd-1dcd-48ef-8e16-819bb8db17c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\AUIScreen">
+      <UniqueIdentifier>{5c56e12d-f9eb-45fa-b0be-09a0af7d7a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\ProfilerScreen">
+      <UniqueIdentifier>{48e5754e-75dc-44bf-88a1-521156f137d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\UIManager">
+      <UniqueIdentifier>{624c9f68-5ae4-484e-b93e-a2067ef07b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\HierarchyScreen">
+      <UniqueIdentifier>{6a65c3fe-e659-4c80-9056-1c99bfefef2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\CreditsScreen">
+      <UniqueIdentifier>{854e2433-d293-4fa8-a514-50a657c96ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\ColorPicker">
+      <UniqueIdentifier>{c9055ffd-866e-4867-8515-2f21c4e9c1d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -126,6 +156,46 @@
     <ClCompile Include="Plane.cpp">
       <Filter>GameEngine\plane</Filter>
     </ClCompile>
+    <ClCompile Include="imGUI\imgui.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_draw.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_impl_dx11.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_impl_win32.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_tables.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_widgets.cpp">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>GameEngine\UI\UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AUIScreen.cpp">
+      <Filter>GameEngine\UI\AUIScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfilerScreen.cpp">
+      <Filter>GameEngine\UI\ProfilerScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScreen.cpp">
+      <Filter>GameEngine\UI\MenuScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyScreen.cpp">
+      <Filter>GameEngine\UI\HierarchyScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorScreen.cpp">
+      <Filter>GameEngine\UI\InspectorScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScreen.cpp">
+      <Filter>GameEngine\UI\CreditsScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPicker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -200,6 +270,52 @@
     <ClInclude Include="Plane.h">
       <Filter>GameEngine\plane</Filter>
     </ClInclude>
+    <ClInclude Include="imGUI\imconfig.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_impl_dx11.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_impl_win32.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_internal.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imstb_rectpack.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imstb_textedit.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imstb_truetype.h">
+      <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>GameEngine\UI\UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AUIScreen.h">
+      <Filter>GameEngine\UI\AUIScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfilerScreen.h">
+      <Filter>GameEngine\UI\ProfilerScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScreen.h">
+      <Filter>GameEngine\UI\MenuScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyScreen.h">
+      <Filter>GameEngine\UI\HierarchyScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorScreen.h">
+      <Filter>GameEngine\UI\InspectorScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>GameEngine\UI\CreditsScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPicker.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">

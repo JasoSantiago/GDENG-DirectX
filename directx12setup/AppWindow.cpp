@@ -4,6 +4,11 @@
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 #include "SceneCameraHandler.h"
+#include "UIManager.h"
+#include "imGUI/imgui.h"
+#include "imGUI/imgui_impl_dx11.h"
+#include "imGUI/imgui_impl_win32.h"
+
 
 AppWindow::AppWindow()
 {
@@ -65,7 +70,7 @@ void AppWindow::onCreate()
 	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->releaseCompiledShader();
 
-
+	UIManager::initialize(this->m_hwnd);
 }
 
 void AppWindow::onUpdate()
@@ -92,8 +97,20 @@ void AppWindow::onUpdate()
 		this->Cubelist[i]->draw(m_width, m_height, this->m_vs, this->m_ps);
 	}
 
+	UIManager::getInstance()->drawAllUI();
+	/*ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("Credits");
+	ImGui::Text("Scene Editor v0.69\n");
+	ImGui::Text("by Jaso Santiago\n");
+	ImGui::Text("Acknowledgments:\n");
+	ImGui::Text("Pardcode\n");
+	ImGui::Text("Sir Neil\n");
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
 	
-
 	// FINALLY DRAW THE TRIANGLE
 
 	m_swap_chain->present(true);
@@ -101,6 +118,7 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
+	
 	Window::onDestroy();
 	//m_vb->release();
 	//m_ib->release();
@@ -109,6 +127,10 @@ void AppWindow::onDestroy()
 	m_vs->release();
 	m_ps->release();
 	GraphicsEngine::get()->release();
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void AppWindow::onFocus()

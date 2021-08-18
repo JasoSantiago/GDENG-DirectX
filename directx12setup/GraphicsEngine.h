@@ -27,6 +27,8 @@ public:
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
 
+	ID3D11Device* getDevice();
+	
 private:
 	ID3D11Device* m_d3d_device;
 	D3D_FEATURE_LEVEL m_feature_level;
