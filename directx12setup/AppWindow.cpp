@@ -46,7 +46,6 @@ void AppWindow::onCreate()
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 
 
-
 	for (int i = 0; i < 5; i++)
 	{
 		float x = distr(eng);
@@ -62,6 +61,7 @@ void AppWindow::onCreate()
 	this->planeObject = new Plane("Plane", shader_byte_code, size_shader);
 	planeObject->setPosition(0, -0.5, 0.0f);
 	planeObject->setScale(0.5f, 0.5f, 0.5f);
+	GraphicsEngine::get()->releaseCompiledShader();
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 
 	GraphicsEngine::get()->releaseCompiledShader();
