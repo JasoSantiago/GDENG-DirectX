@@ -103,17 +103,13 @@ IndexBuffer* GraphicsEngine::createIndexBuffer()
 	return new IndexBuffer();
 }
 
-VertexShader* GraphicsEngine::createVertexShader(const void* shader_byte_code, size_t byte_code_size)
+VertexShader* GraphicsEngine::createVertexShader(void* shader_byte_code, size_t byte_code_size)
 {
 	VertexShader* vs = new VertexShader();
 
-	if (!vs->init(shader_byte_code, byte_code_size))
-	{
-		vs->release();
-		return nullptr;
-	}
-
-	return vs;
+	VertexShader* vertexShader = new VertexShader();
+	vertexShader->init(shader_byte_code, byte_code_size);
+	return vertexShader;
 }
 
 PixelShader* GraphicsEngine::createPixelShader(const void* shader_byte_code, size_t byte_code_size)

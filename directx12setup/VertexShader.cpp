@@ -1,4 +1,7 @@
 #include "VertexShader.h"
+
+#include <iostream>
+
 #include "GraphicsEngine.h"
 
 
@@ -12,12 +15,17 @@ void VertexShader::release()
 	delete this;
 }
 
-bool VertexShader::init(const void* shader_byte_code, size_t byte_code_size)
+void VertexShader::init(void* shader_byte_code, size_t byte_code_size)
 {
-	if (!SUCCEEDED(GraphicsEngine::get()->m_d3d_device->CreateVertexShader(shader_byte_code, byte_code_size, nullptr, &m_vs)))
-		return false;
+	ID3D11Device* directXDevice = GraphicsEngine::get()->m_d3d_device;
+	HRESULT vertexResult = directXDevice->CreateVertexShader(shader_byte_code, byte_code_size, NULL, &this->m_vs);
 
-	return true;
+	if (SUCCEEDED(vertexResult)) {
+		std::cout << "Created runtime vertex shader successfully. \n";
+	}
+	else {
+		std::cout << "An error occured during creating of runtime vertex shader. \n";
+	}
 }
 
 
