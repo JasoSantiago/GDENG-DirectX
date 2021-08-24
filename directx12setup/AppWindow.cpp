@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 #include <Windows.h>
+
+#include "GameObjectManager.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
@@ -44,7 +46,7 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
-
+	GameObjectManager::initialize();
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -55,6 +57,7 @@ void AppWindow::onCreate()
 		CubeObject->setPosition(x, y, 0.0f);
 		CubeObject->setScale(0.25, 0.25, 0.25);
 		this->Cubelist.push_back(CubeObject);
+		GameObjectManager::getInstance()->addObject(CubeObject);
 
 	}
 

@@ -61,6 +61,18 @@ public:
 		Vector3D temp = Vector3D(1.0f, 1.0f, 1.0f);
 		return temp;
 	}
+
+	float getX()
+	{
+		return m_x;
+	}
+	float getY()
+	{
+		return m_y;
+	}float getZ()
+	{
+		return m_z;
+	}
 public:
 	float m_x, m_y, m_z;
 };

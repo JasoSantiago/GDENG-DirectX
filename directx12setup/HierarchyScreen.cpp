@@ -2,7 +2,7 @@
 #include "imGUI/imgui.h"
 #include "imGUI/imgui_impl_dx11.h"
 #include "imGUI/imgui_impl_win32.h"
-//#include "GameObjectManager.h"
+#include "GameObjectManager.h"
 #include "UIManager.h"
 
 HierarchyScreen::HierarchyScreen() : AUIScreen("HierarchyScreen")
@@ -25,11 +25,11 @@ void HierarchyScreen::drawUI()
 
 void HierarchyScreen::updateObjectList() const
 {
-	/*GameObjectManager::List objectList = GameObjectManager::getInstance()->getAllObjects();
+	GameObjectManager::List objectList = GameObjectManager::getInstance()->getAllObjects();
 	for (int i = 0; i < objectList.size(); i++) {
 		String objectName = objectList[i]->getName();
 		if (ImGui::Button(objectName.c_str(), ImVec2(235, 0))) {
 			GameObjectManager::getInstance()->setSelectedObject(objectName);
 		}
-	}*/
+	}
 }
