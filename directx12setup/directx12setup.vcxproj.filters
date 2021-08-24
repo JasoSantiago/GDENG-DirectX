@@ -94,6 +94,9 @@
     <Filter Include="GameEngine\UI\ColorPicker">
       <UniqueIdentifier>{c9055ffd-866e-4867-8515-2f21c4e9c1d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GameObjectManager">
+      <UniqueIdentifier>{c42e863e-b4b3-464c-b65c-3d2d436fae7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,7 +198,12 @@
     <ClCompile Include="CreditsScreen.cpp">
       <Filter>GameEngine\UI\CreditsScreen</Filter>
     </ClCompile>
-    <ClCompile Include="ColorPicker.cpp" />
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameEngine\GameObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPicker.cpp">
+      <Filter>GameEngine\UI\ColorPicker</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -315,7 +323,12 @@
     <ClInclude Include="CreditsScreen.h">
       <Filter>GameEngine\UI\CreditsScreen</Filter>
     </ClInclude>
-    <ClInclude Include="ColorPicker.h" />
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameEngine\GameObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPicker.h">
+      <Filter>GameEngine\UI\ColorPicker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">

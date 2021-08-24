@@ -153,6 +153,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
     <ClCompile Include="EngineTIme.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="HierarchyScreen.cpp" />
     <ClCompile Include="imGUI\imgui.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DeviceContext.h" />
     <ClInclude Include="EngineTIme.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="HierarchyScreen.h" />
     <ClInclude Include="imGUI\imconfig.h" />

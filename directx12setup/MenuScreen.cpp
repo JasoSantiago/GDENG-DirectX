@@ -3,7 +3,7 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 #include <iostream>
-//#include "GameObjectManager.h"
+#include "GameObjectManager.h"
 #include "GraphicsEngine.h"
 #include "VertexShader.h"
 #include "CreditsScreen.h"
@@ -52,15 +52,15 @@ void MenuScreen::drawUI()
 void MenuScreen::OnCreateCubeClicked()
 {
 	//initialize vertex for object
-	/*void* shaderByteCode = nullptr;
+	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
 	graphEngine->compileVertexShader(L"VertexShader.hlsl", "main", &shaderByteCode, &sizeShader);
 	VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
-
+	std::cout << "hello";
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE, shaderByteCode, sizeShader);
-
-	vertexShader->release();*/
+	std::cout << "hi";
+	vertexShader->release();
 	std::cout << "cube Created \n";
 }
 
@@ -72,7 +72,7 @@ void MenuScreen::OnCreateSphereClicked()
 void MenuScreen::OnCreatePlaneClicked()
 {
 	//initialize vertex for object
-	/*void* shaderByteCode = nullptr;
+	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
 	graphEngine->compileVertexShader(L"VertexShader.hlsl", "main", &shaderByteCode, &sizeShader);
@@ -80,7 +80,7 @@ void MenuScreen::OnCreatePlaneClicked()
 
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE, shaderByteCode, sizeShader);
 
-	vertexShader->release();*/
+	vertexShader->release();
 	std::cout << "creating Plane\n";
 }
 
