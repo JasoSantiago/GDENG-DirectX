@@ -1,6 +1,1 @@
-﻿  HierarchyScreen.cpp
-C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  directx12setup.vcxproj -> C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\x64\Debug\directx12setup.exe
+﻿  directx12setup.vcxproj -> C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\x64\Debug\directx12setup.exe

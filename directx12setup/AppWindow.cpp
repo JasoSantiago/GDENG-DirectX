@@ -48,19 +48,6 @@ void AppWindow::onCreate()
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 	GameObjectManager::initialize();
 
-	for (int i = 0; i < 5; i++)
-	{
-		float x = distr(eng);
-		float y = distr(eng);
-		Cube* CubeObject = new Cube("Cube", shader_byte_code, size_shader);
-		CubeObject->setAnimSpeed(distr2(eng));
-		CubeObject->setPosition(x, y, 0.0f);
-		CubeObject->setScale(0.25, 0.25, 0.25);
-		this->Cubelist.push_back(CubeObject);
-		GameObjectManager::getInstance()->addObject(CubeObject);
-
-	}
-
 	this->planeObject = new Plane("Plane", shader_byte_code, size_shader);
 	planeObject->setPosition(0, -0.5, 0.0f);
 	planeObject->setScale(0.5f, 0.5f, 0.5f);
@@ -93,28 +80,10 @@ void AppWindow::onUpdate()
 
 	planeObject->update(EngineTime::getDeltaTime());
 	planeObject->draw(m_width, m_height, this->m_vs, this->m_ps);
-	
-	for (int i = 0; i < Cubelist.size(); i++)
-	{
-		this->Cubelist[i]->update(EngineTime::getDeltaTime());
-		this->Cubelist[i]->draw(m_width, m_height, this->m_vs, this->m_ps);
-	}
 
+	GameObjectManager::getInstance()->updateAll();
+	GameObjectManager::getInstance()->renderAll(m_width, m_height, m_vs, m_ps);
 	UIManager::getInstance()->drawAllUI();
-	/*ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGui::Begin("Credits");
-	ImGui::Text("Scene Editor v0.69\n");
-	ImGui::Text("by Jaso Santiago\n");
-	ImGui::Text("Acknowledgments:\n");
-	ImGui::Text("Pardcode\n");
-	ImGui::Text("Sir Neil\n");
-	ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
-	
-	// FINALLY DRAW THE TRIANGLE
 
 	m_swap_chain->present(true);
 }

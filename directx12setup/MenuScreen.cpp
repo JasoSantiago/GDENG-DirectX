@@ -55,11 +55,9 @@ void MenuScreen::OnCreateCubeClicked()
 	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	graphEngine->compileVertexShader(L"VertexShader.hlsl", "main", &shaderByteCode, &sizeShader);
+	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
 	VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
-	std::cout << "hello";
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE, shaderByteCode, sizeShader);
-	std::cout << "hi";
 	vertexShader->release();
 	std::cout << "cube Created \n";
 }
@@ -75,7 +73,7 @@ void MenuScreen::OnCreatePlaneClicked()
 	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	graphEngine->compileVertexShader(L"VertexShader.hlsl", "main", &shaderByteCode, &sizeShader);
+	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
 	VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
 
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE, shaderByteCode, sizeShader);

@@ -21,8 +21,8 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader): AGameObject(na
 	};
 
 	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
-	Quad::createQuad(vertex_list, vertex_buffer, shaderByteCode, sizeShader, ARRAYSIZE(vertex_list));
-
+	//Quad::createQuad(vertex_list, vertex_buffer, shaderByteCode, sizeShader, ARRAYSIZE(vertex_list));
+	vertex_buffer->loadQuad(vertex_list, sizeof(vertex), ARRAYSIZE(vertex_list), shaderByteCode, sizeShader);
 
 
 	unsigned int index_list[] =
