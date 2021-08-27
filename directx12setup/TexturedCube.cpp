@@ -2,8 +2,9 @@
 #include "SceneCameraHandler.h"
 #include "TextureManager.h"
 
-TexturedCube::TexturedCube(std::string name, void* shaderByteCode, size_t sizeShader) : Cube(name,shaderByteCode,sizeShader)
+TexturedCube::TexturedCube(std::string name, void* shaderByteCode, size_t sizeShader) :AGameObject(name)
 {
+	std::cout << "constructed Textured Cube\n";
 	this->m_tex = TextureManager::getInstance()->createTextureFromFile(L"wood.jpg");
 	Vector3D positionList[] =
 	{
@@ -29,37 +30,37 @@ Vector2D textcoordList[] =
 Vertex vertexList[] =
 {
 
-	{ positionList[0],textcoordList[1] },
-	{ positionList[1],textcoordList[0] },
-	{ positionList[2],textcoordList[2] },
-	{ positionList[3],textcoordList[3] },
+		{ positionList[0],textcoordList[1] },
+		{ positionList[1],textcoordList[0] },
+		{ positionList[2],textcoordList[2] },
+		{ positionList[3],textcoordList[3] },
 
 
-	{ positionList[4],textcoordList[1] },
-	{ positionList[5],textcoordList[0] },
-	{ positionList[6],textcoordList[2] },
-	{ positionList[7],textcoordList[3] },
+		{ positionList[4],textcoordList[1] },
+		{ positionList[5],textcoordList[0] },
+		{ positionList[6],textcoordList[2] },
+		{ positionList[7],textcoordList[3] },
 
 
-	{ positionList[1],textcoordList[1] },
-	{ positionList[6],textcoordList[0] },
-	{ positionList[5],textcoordList[2] },
-	{ positionList[2],textcoordList[3] },
+		{ positionList[1],textcoordList[1] },
+		{ positionList[6],textcoordList[0] },
+		{ positionList[5],textcoordList[2] },
+		{ positionList[2],textcoordList[3] },
 
-	{ positionList[7],textcoordList[1] },
-	{ positionList[0],textcoordList[0] },
-	{ positionList[3],textcoordList[2] },
-	{ positionList[4],textcoordList[3] },
+		{ positionList[7],textcoordList[1] },
+		{ positionList[0],textcoordList[0] },
+		{ positionList[3],textcoordList[2] },
+		{ positionList[4],textcoordList[3] },
 
-	{ positionList[3],textcoordList[1] },
-	{ positionList[2],textcoordList[0] },
-	{ positionList[5],textcoordList[2] },
-	{ positionList[4],textcoordList[3] },
+		{ positionList[3],textcoordList[1] },
+		{ positionList[2],textcoordList[0] },
+		{ positionList[5],textcoordList[2] },
+		{ positionList[4],textcoordList[3] },
 
-	{ positionList[7],textcoordList[1] },
-	{ positionList[6],textcoordList[0] },
-	{ positionList[1],textcoordList[2] },
-	{ positionList[0],textcoordList[3] }
+		{ positionList[7],textcoordList[1] },
+		{ positionList[6],textcoordList[0] },
+		{ positionList[1],textcoordList[2] },
+		{ positionList[0],textcoordList[3] }
 };
 
 	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
@@ -69,15 +70,17 @@ Vertex vertexList[] =
 
 	unsigned int index_list[] =
 	{
-		//FRONT SIDE
-		0,1,2,  //FIRST TRIANGLE
+		 0,1,2,  //FIRST TRIANGLE
 		2,3,0,  //SECOND TRIANGLE
 		//BACK SIDE
+
 		4,5,6,
 		6,7,4,
+
 		//TOP SIDE
 		8,9,10,
 		10,11,8,
+
 		//BOTTOM SIDE
 		12,13,14,
 		14,15,12,
@@ -105,6 +108,10 @@ TexturedCube::~TexturedCube()
 	this->vertex_buffer->release();
 	this->index_buffer->release();
 	AGameObject::~AGameObject();
+}
+
+void TexturedCube::update(float deltaTime)
+{
 }
 
 void TexturedCube::draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader)
@@ -158,8 +165,8 @@ void TexturedCube::draw(int width, int height, VertexShader* vertex_shader, Pixe
 	this->cosntant_buffer->update(device_context, &cbData);
 	device_context->setConstantBuffer(this->cosntant_buffer);
 
-	device_context->setTexture(this->m_tex);
 	device_context->setIndexBuffer(this->index_buffer);
 	device_context->setVertexBuffer(this->vertex_buffer);
+	device_context->setTexture(this->m_tex);
 	device_context->drawIndexedTriangleList(this->index_buffer->getSizeIndexList(), 0, 0);
 }

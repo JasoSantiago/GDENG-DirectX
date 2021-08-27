@@ -11,7 +11,7 @@
 class Cube: public AGameObject
 {
 public:
-	Cube(std::string name, void* shaderByteCode, size_t sizeShader);
+	Cube(std::string name, void* shaderByteCode, size_t sizeShader, bool skipint = false);
 	~Cube();
 
 	void update(float deltaTime) override;

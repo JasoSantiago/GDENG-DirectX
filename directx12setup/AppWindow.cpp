@@ -47,20 +47,26 @@ void AppWindow::onCreate()
 	SceneCameraHandler::getInstance()->getSceneCamera()->setDimensions(m_width, m_height);
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
-	GraphicsEngine::get()->compileVertexShader(L"TextureVertexShader.hlsl", "tvsmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::get()->compileVertexShader(L"TextureVertexShader.hlsl", "main", &shader_byte_code, &size_shader);
+	//GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 	GameObjectManager::initialize();
 	TextureManager::initialize();
 	Texture* tex = TextureManager::getInstance()->createTextureFromFile(L"wood.jpg");
 
-	textCube = new TexturedCube("textCube", shader_byte_code, size_shader);
+	//Cubelist.push_back(new Cube("textCube", shader_byte_code, size_shader));
+	textCube = new TexturedCube("Cube", shader_byte_code, size_shader);
+	textCube->setPosition(0.0f, 0.0f, 0.0f);
+	textCube->setScale(1.0f, 1.0f, 1.0f);
+	GameObjectManager::getInstance()->addObject(textCube);
 	GraphicsEngine::get()->releaseCompiledShader();
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 
 	GraphicsEngine::get()->releaseCompiledShader();
 
-	GraphicsEngine::get()->compilePixelShader(L"TexturedPixelShader.hlsl", "tpsmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::get()->compilePixelShader(L"TexturedPixelShader.hlsl", "main", &shader_byte_code, &size_shader);
+	//GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->releaseCompiledShader();
 
@@ -73,16 +79,18 @@ void AppWindow::onUpdate()
 
 	InputSystem::getInstance()->update();
 	SceneCameraHandler::getInstance()->update();
-	//CLEAR THE RENDER TARGET
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
 	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.3f, 0.4f, 1);
-	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
+
+
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
 
+	//Cubelist[0]->draw(m_width, m_height, m_vs, m_ps);
 	textCube->draw(m_width,m_height,m_vs,m_ps);
+	
 	GameObjectManager::getInstance()->updateAll();
 	GameObjectManager::getInstance()->renderAll(m_width, m_height, m_vs, m_ps);
 	UIManager::getInstance()->drawAllUI();

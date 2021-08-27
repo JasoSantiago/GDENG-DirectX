@@ -1,5 +1,3 @@
-
-
 Texture2D Texture: register(t0);
 sampler TextureSampler: register(s0);
 
@@ -16,7 +14,7 @@ cbuffer constant: register(b0) {
 	float time;
 }
 
-float4 tpsmain(PS_INPUT input) : SV_TARGET
+float4 main(PS_INPUT input) : SV_TARGET
 {
 	return Texture.Sample(TextureSampler,input.texcoord);
 }

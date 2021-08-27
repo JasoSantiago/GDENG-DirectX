@@ -1,8 +1,14 @@
 #include "Cube.h"
 
 
-Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
+Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader, bool skipinit): AGameObject(name)
 {
+	if(skipinit)
+	{
+		return;
+	}
+
+	std::cout << "created Cube";
 	Vertex vertex_list[] =
 	{
 		//X - Y - Z

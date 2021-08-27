@@ -16,7 +16,7 @@ void InspectorScreen::drawUI()
 {
 	ImGui::Begin("Inspector Window");
 	ImGui::SetWindowPos(ImVec2(UIManager::WINDOW_WIDTH - 275, 20));
-	ImGui::SetWindowSize(ImVec2(225, UIManager::WINDOW_HEIGHT));
+	ImGui::SetWindowSize(ImVec2(250, UIManager::WINDOW_HEIGHT));
 	this->selectedObject = GameObjectManager::getInstance()->getSelectedObject();
 	if (this->selectedObject != NULL) {
 		String name = this->selectedObject->getName();

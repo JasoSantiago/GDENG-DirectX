@@ -10,23 +10,23 @@ struct VS_OUTPUT {
 
 cbuffer constant: register(b0) {
 	//unsigned int time;
-	row_major float4x4 world;
-	row_major float4x4 view;
-	row_major float4x4 proj;
-	float time;
+	row_major float4x4 m_world;
+	row_major float4x4 m_view;
+	row_major float4x4 m_proj;
+	unsigned int m_time;
 }
 
-VS_OUTPUT tvsmain(VS_INPUT input)
+VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	//WORLD SPACE
-	output.pos = mul(input.pos, world);
+	output.pos = mul(input.pos, m_world);
 
 	//VIEW SPACE
-	output.pos = mul(output.pos, view);
+	output.pos = mul(output.pos, m_view);
 
 	//PROJ SPACE
-	output.pos = mul(output.pos, proj);
+	output.pos = mul(output.pos, m_proj);
 
 	output.texcoord = input.texcoord;
 	return output;
