@@ -4,16 +4,17 @@
 #include "DeviceContext.h"
 #include "Vector3D.h"
 
-struct vertex
-{
-	Vector3D position;
-	Vector3D position1;
-	Vector3D color;
-	Vector3D color1;
-};
 
 class Quad
 {
+	struct vertex
+	{
+		Vector3D position;
+		Vector3D position1;
+		Vector3D color;
+		Vector3D color1;
+	};
+
 public:
 	Quad();
 	~Quad();

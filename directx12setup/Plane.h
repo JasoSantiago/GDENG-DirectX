@@ -9,7 +9,7 @@
 class Plane: public AGameObject
 {
 public:
-	Plane(string name, void* shaderByteCode, size_t sizeShader);
+	Plane(std::string name, void* shaderByteCode, size_t sizeShader);
 	~Plane();
 	void update(float deltaTime) override;
 	void draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader) override;
@@ -25,6 +25,11 @@ private:
 	float speed = 10.0f;
 	float rot_x = 0.0f;
 	float rot_y = 0.0f;
+	struct Vertex {
+		Vector3D position;
+		Vector3D color;
+		Vector3D color2;
+	};
 };
 
 

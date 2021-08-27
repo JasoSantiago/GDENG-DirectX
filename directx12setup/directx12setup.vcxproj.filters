@@ -97,6 +97,15 @@
     <Filter Include="GameEngine\GameObjectManager">
       <UniqueIdentifier>{c42e863e-b4b3-464c-b65c-3d2d436fae7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager">
+      <UniqueIdentifier>{ac33c03e-aaa4-46dd-b547-0f341e226ac4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\TextureManager">
+      <UniqueIdentifier>{94e9fa81-79f4-4908-884a-4f1617925093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\TexturedCube">
+      <UniqueIdentifier>{81b7cbf8-6a73-4f25-87fc-a2722bfe7d11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -203,6 +212,21 @@
     </ClCompile>
     <ClCompile Include="ColorPicker.cpp">
       <Filter>GameEngine\UI\ColorPicker</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>GameEngine\GraphicsEngine\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedCube.cpp">
+      <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,12 +353,36 @@
     <ClInclude Include="ColorPicker.h">
       <Filter>GameEngine\UI\ColorPicker</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>GameEngine\GraphicsEngine\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>GameEngine\GraphicsEngine\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedCube.h">
+      <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
       <Filter>app</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
+      <Filter>app</Filter>
+    </FxCompile>
+    <FxCompile Include="TextureVertexShader.hlsl">
+      <Filter>app</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedPixelShader.hlsl">
       <Filter>app</Filter>
     </FxCompile>
   </ItemGroup>

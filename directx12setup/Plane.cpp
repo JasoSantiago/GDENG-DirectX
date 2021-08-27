@@ -1,20 +1,19 @@
 #include "Plane.h"
 #include "SceneCameraHandler.h"
 
-Plane::Plane(string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
+Plane::Plane(std::string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
 {
 
-	vertex plane_list[] =
+	Vertex plane_list[] =
 	{
-		{Vector3D(-5.0f,-0.0f,-5.0f),    Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
-		{Vector3D(-5.0f,0.0f,5.0f),    Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
-		{ Vector3D(5.0f,-0.0f,-5.0f),   Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
-		{ Vector3D(5.0f,0.f,5.0f),     Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
+		{Vector3D(-3.0f,-0.0f,-3.0f),    Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
+		{Vector3D(-3.0f,0.0f,3.0f),    Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
+		{ Vector3D(3.0f,-0.0f,-3.0f),   Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
+		{ Vector3D(3.0f,0.f,3.0f),     Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
 	};
 
 	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
-	Quad::createQuad(plane_list, vertex_buffer, shaderByteCode, sizeShader, ARRAYSIZE(plane_list));
-
+	vertex_buffer->loadQuad(plane_list, sizeof(Vertex), ARRAYSIZE(plane_list), shaderByteCode, sizeShader);
 	CBData cbData = {};
 	cbData.m_time = 0;
 	this->cosntant_buffer = GraphicsEngine::get()->createConstantBuffer();
@@ -81,8 +80,7 @@ void Plane::draw(int width, int height, VertexShader* vertex_shader, PixelShader
 	//cbData.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 1000.0f);
 	cbData.m_proj = SceneCameraHandler::getInstance()->getProjectionViewMatrix();
 	this->cosntant_buffer->update(device_context, &cbData);
-	device_context->setConstantBuffer(vertex_shader, this->cosntant_buffer);
-	device_context->setConstantBuffer(pixel_shader, this->cosntant_buffer);
+	device_context->setConstantBuffer( this->cosntant_buffer);
 
 
 	device_context->setVertexBuffer(this->vertex_buffer);

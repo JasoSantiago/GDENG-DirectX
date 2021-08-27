@@ -1,7 +1,5 @@
 #include "MenuScreen.h"
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_dx11.h"
-#include "ImGui/imgui_impl_win32.h"
+#include "imGUI/imgui.h"
 #include <iostream>
 #include "GameObjectManager.h"
 #include "GraphicsEngine.h"
@@ -22,21 +20,10 @@ void MenuScreen::drawUI()
 {
 
 	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Exit Editor", "Ctrl+W")) {/*Do something */ }
-			ImGui::EndMenu();
-		}
 		if (ImGui::BeginMenu("Game Object")) {
 			if (ImGui::MenuItem("Create Cube")) { this->OnCreateCubeClicked(); }
 			if (ImGui::MenuItem("Create Sphere")) { this->OnCreateSphereClicked(); }
 			if (ImGui::MenuItem("Create Plane")) { this->OnCreatePlaneClicked(); }
-			if (ImGui::BeginMenu("Light")) {
-				if (ImGui::MenuItem("Point Light")) { /* Do stuff */ }
-				ImGui::EndMenu();
-			}
 			if(ImGui::MenuItem("Create Color Picker")) { this->onCreateColorPicker(); }
 			ImGui::EndMenu();
 		}
@@ -51,7 +38,6 @@ void MenuScreen::drawUI()
 
 void MenuScreen::OnCreateCubeClicked()
 {
-	//initialize vertex for object
 	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
@@ -69,7 +55,6 @@ void MenuScreen::OnCreateSphereClicked()
 
 void MenuScreen::OnCreatePlaneClicked()
 {
-	//initialize vertex for object
 	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
 	GraphicsEngine* graphEngine = GraphicsEngine::get();

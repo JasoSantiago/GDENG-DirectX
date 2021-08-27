@@ -65,7 +65,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 bool Window::init()
 {
-
+	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (SUCCEEDED(hr)) {
+		std::cout << "CoInitialize Success\n";
+	}
 
 
 	WNDCLASSEX wc;
@@ -98,7 +101,7 @@ bool Window::init()
 
 
 	m_isrun = true;
-
+	
 	EngineTime::initialize();
 
 	return true;

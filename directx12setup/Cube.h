@@ -5,12 +5,13 @@
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "Quad.h"
+#include "SceneCameraHandler.h"
 
 
 class Cube: public AGameObject
 {
 public:
-	Cube(string name, void* shaderByteCode, size_t sizeShader);
+	Cube(std::string name, void* shaderByteCode, size_t sizeShader);
 	~Cube();
 
 	void update(float deltaTime) override;
@@ -19,7 +20,7 @@ public:
 	void rotateCubex(float value, float deltaTime); 
 	void rotateCubey(float value, float deltaTime);
 	
-private:
+protected:
 	VertexBuffer* vertex_buffer;
 	IndexBuffer* index_buffer;
 	ConstantBuffer* cosntant_buffer;
@@ -29,5 +30,11 @@ private:
 	float speed = 10.0f;
 	float rot_x = 0.0f;
 	float rot_y = 0.0f;
+private:
+	struct Vertex {
+		Vector3D position;
+		Vector3D color;
+		Vector3D color2;
+	};
 };
 

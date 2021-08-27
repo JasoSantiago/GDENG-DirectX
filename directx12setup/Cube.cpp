@@ -1,9 +1,9 @@
 #include "Cube.h"
-#include "SceneCameraHandler.h"
 
-Cube::Cube(string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
+
+Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
 {
-	vertex vertex_list[] =
+	Vertex vertex_list[] =
 	{
 		//X - Y - Z
 		//FRONT FACE
@@ -22,7 +22,7 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader): AGameObject(na
 
 	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
 	//Quad::createQuad(vertex_list, vertex_buffer, shaderByteCode, sizeShader, ARRAYSIZE(vertex_list));
-	vertex_buffer->loadQuad(vertex_list, sizeof(vertex), ARRAYSIZE(vertex_list), shaderByteCode, sizeShader);
+	vertex_buffer->loadQuad(vertex_list, sizeof(Vertex), ARRAYSIZE(vertex_list), shaderByteCode, sizeShader);
 
 
 	unsigned int index_list[] =
@@ -123,10 +123,8 @@ void Cube::draw(int width, int height, VertexShader* vertex_shader, PixelShader*
 	//cbData.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 1000.0f);
 	cbData.m_proj = SceneCameraHandler::getInstance()->getProjectionViewMatrix();	
 	this->cosntant_buffer->update(device_context, &cbData);
-	device_context->setConstantBuffer(vertex_shader, this->cosntant_buffer);
-	device_context->setConstantBuffer(pixel_shader, this->cosntant_buffer);
+	device_context->setConstantBuffer(this->cosntant_buffer);
 
-	
 	device_context->setIndexBuffer(this->index_buffer);
 	device_context->setVertexBuffer(this->vertex_buffer);
 	device_context->drawIndexedTriangleList(this->index_buffer->getSizeIndexList(), 0, 0);

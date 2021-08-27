@@ -5,7 +5,7 @@
 class Camera: public AGameObject, public InputListener
 {
 public:
-	Camera(string name);
+	Camera(std::string name);
 	Camera(float width, float height);
 	~Camera();
 

@@ -13,9 +13,9 @@ private:
 	void updateTransformDisplays();
 	friend class UIManager;
 
-	float positionDisplay[3] = { 0.0f, 0.0f, 0.0f };
-	float rotationDisplay[3] = { 0.0f, 0.0f, 0.0f };
-	float scaleDisplay[3] = { 1.0f, 1.0f, 1.0f };
+	float Displayposition[3] = { 0.0f, 0.0f, 0.0f };
+	float Displayrotation[3] = { 0.0f, 0.0f, 0.0f };
+	float Displayscale[3] = { 1.0f, 1.0f, 1.0f };
 
 	AGameObject* selectedObject = NULL;
 };

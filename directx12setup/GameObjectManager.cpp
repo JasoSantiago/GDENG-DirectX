@@ -4,6 +4,7 @@
 #include "Cube.h"
 #include "Plane.h"
 #include "AGameObject.h"
+#include "TexturedCube.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = NULL;
 
@@ -24,9 +25,9 @@ void GameObjectManager::destroy()
 	delete sharedInstance;
 }
 
-AGameObject* GameObjectManager::findObjectByName(string name)
+AGameObject* GameObjectManager::findObjectByName(std::string name)
 {
-	if (this->gameObjectMap[name] != NULL) {
+	if (this->gameObjectMap[name] != nullptr) {
 		return this->gameObjectMap[name];
 	}
 	else {
@@ -48,42 +49,36 @@ int GameObjectManager::activeObjects()
 void GameObjectManager::updateAll()
 {
 	for (int i = 0; i < this->gameObjectList.size(); i++) {
-		//replace with component update
-		if (this->gameObjectList[i]->isEnabled()) {
 			this->gameObjectList[i]->update(EngineTime::getDeltaTime());
-		}
+
 	}
 }
 
 void GameObjectManager::renderAll(int viewportWidth, int viewportHeight, VertexShader* vertexShader, PixelShader* pixelShader)
 {
 	for (int i = 0; i < this->gameObjectList.size(); i++) {
-		//replace with component update
-		if (this->gameObjectList[i]->isEnabled()) {
+
 			this->gameObjectList[i]->draw(viewportWidth, viewportHeight, vertexShader, pixelShader);
-		}
+
 	}
 }
 
 void GameObjectManager::addObject(AGameObject* gameObject)
 {
-	if (this->gameObjectMap[gameObject->getName()] != NULL) {
-		std::cout << "1";
+	//used to generate the name of the objects so that they don't overlap
+	if (this->gameObjectMap[gameObject->getName()] != nullptr) {
 		int count = 1;
-		String revisedString = gameObject->getName() + " " + "(" + to_string(count) + ")";
-		while (this->gameObjectMap[revisedString] != NULL) {
+		String revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
+		while (this->gameObjectMap[revisedString] != nullptr) {
 			count++;
-			revisedString = gameObject->getName() + " " + "(" + to_string(count) + ")";
+			revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
 		}
-		//std::cout << "Duplicate found. New name is: " << revisedString << "\n";
 		gameObject->name = revisedString;
 		this->gameObjectMap[revisedString] = gameObject;
 	}
 	else {
-		std::cout << "2";
 		this->gameObjectMap[gameObject->getName()] = gameObject;
 	}
-	std::cout << "cube";
 	this->gameObjectList.push_back(gameObject);
 }
 
@@ -98,6 +93,7 @@ void GameObjectManager::createObject(PrimitiveType type, void* shaderByteCode, s
 
 	if (type == PrimitiveType::PLANE) {
 		Plane* plane = new Plane("Plane", shaderByteCode, sizeShader);
+		plane->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(plane);
 	}
 }
@@ -121,18 +117,18 @@ void GameObjectManager::deleteObject(AGameObject* gameObject)
 	delete gameObject;
 }
 
-void GameObjectManager::deleteObjectByName(string name)
+void GameObjectManager::deleteObjectByName(std::string name)
 {
 	AGameObject* object = this->findObjectByName(name);
 
-	if (object != NULL) {
+	if (object != nullptr ) {
 		this->deleteObject(object);
 	}
 }
 
-void GameObjectManager::setSelectedObject(string name)
+void GameObjectManager::setSelectedObject(std::string name)
 {
-	if (this->gameObjectMap[name] != NULL) {
+	if (this->gameObjectMap[name] != nullptr) {
 		this->setSelectedObject(this->gameObjectMap[name]);
 	}
 }

@@ -13,11 +13,12 @@
 #include "InputListener.h"
 #include "Matrix4x4.h"
 #include "SoundClass.h"
-#include "Quad.h"
-#include "Cube.h"
+//#include "Quad.h"
+//#include "Cube.h"
 #include "IndexBuffer.h"
 #include "AGameObject.h"
 #include "Plane.h"
+#include "TexturedCube.h"
 
 class AppWindow : public Window, public InputListener
 {
@@ -32,8 +33,6 @@ public:
 	virtual void onDestroy() override;
 	virtual void onFocus() override;
 	virtual void onKillFocus() override;
-
-	
 	//inherited via inputlistener
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
@@ -82,9 +81,10 @@ private:
 
 	int width;
 	int height;
-	vector<Cube*> Cubelist;
+	std::vector<Cube*> Cubelist;
 	Plane* planeObject;
-
+	Texture* m_wood_tex;
+	TexturedCube* textCube;
 };
 
 
