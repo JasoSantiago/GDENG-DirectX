@@ -46,7 +46,7 @@ int GameObjectManager::activeObjects()
 	return this->gameObjectList.size();
 }
 
-void GameObjectManager::updateAll()
+void GameObjectManager::updateAllObjects()
 {
 	for (int i = 0; i < this->gameObjectList.size(); i++) {
 			this->gameObjectList[i]->update(EngineTime::getDeltaTime());
@@ -54,11 +54,11 @@ void GameObjectManager::updateAll()
 	}
 }
 
-void GameObjectManager::renderAll(int viewportWidth, int viewportHeight, VertexShader* vertexShader, PixelShader* pixelShader)
+void GameObjectManager::renderAllObjects(int width, int height)
 {
 	for (int i = 0; i < this->gameObjectList.size(); i++) {
 
-			this->gameObjectList[i]->draw(viewportWidth, viewportHeight, vertexShader, pixelShader);
+			this->gameObjectList[i]->draw(width, height);
 
 	}
 }
@@ -82,19 +82,26 @@ void GameObjectManager::addObject(AGameObject* gameObject)
 	this->gameObjectList.push_back(gameObject);
 }
 
-void GameObjectManager::createObject(PrimitiveType type, void* shaderByteCode, size_t sizeShader)
+void GameObjectManager::createObject(PrimitiveType type)
 {
 	if (type == PrimitiveType::CUBE) {
-		Cube* cube = new Cube("Cube", shaderByteCode, sizeShader);
+		Cube* cube = new Cube("Cube");
 		cube->setPosition(0.0f, 0.0f, 0.0f);
 		cube->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(cube);
 	}
 
 	if (type == PrimitiveType::PLANE) {
-		Plane* plane = new Plane("Plane", shaderByteCode, sizeShader);
+		Plane* plane = new Plane("Plane");
 		plane->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(plane);
+	}
+	if(type == PrimitiveType::TEXTUREDCUBE)
+	{
+		TexturedCube* TCube = new TexturedCube("Textured Cube");
+		TCube->setPosition(0.0f, 0.0f, 0.0f);
+		TCube->setScale(1.0f, 1.0f, 1.0f);
+		this->addObject(TCube);
 	}
 }
 

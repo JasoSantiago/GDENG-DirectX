@@ -1,2 +1,35 @@
-﻿  VertexBuffer.cpp
+﻿  AppWindow.cpp
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(47,21): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(48,23): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(89,79): warning C4244: 'argument': conversion from 'float' to 'UINT', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(89,70): warning C4244: 'argument': conversion from 'float' to 'UINT', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(91,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\AppWindow.cpp(91,53): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  GameObjectManager.cpp
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\GameObjectManager.cpp(46,36): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\GameObjectManager.cpp(52,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  HierarchyScreen.cpp
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  InspectorScreen.cpp
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  MenuScreen.cpp
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(106,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(107,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(108,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\directx12setup\Matrix4x4.h(109,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   directx12setup.vcxproj -> C:\Users\Admin\Desktop\directx\directx12setup\GDENG-DirectX\x64\Debug\directx12setup.exe

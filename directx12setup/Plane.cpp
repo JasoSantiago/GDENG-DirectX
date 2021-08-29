@@ -1,8 +1,13 @@
 #include "Plane.h"
 #include "SceneCameraHandler.h"
+#include "ShaderLibrary.h"
 
-Plane::Plane(std::string name, void* shaderByteCode, size_t sizeShader): AGameObject(name)
+Plane::Plane(std::string name): AGameObject(name)
 {
+	ShaderNames shaderNames;
+	void* shaderByteCode = NULL;
+	size_t sizeShader = 0;
+	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
 
 	Vertex plane_list[] =
 	{
@@ -13,7 +18,7 @@ Plane::Plane(std::string name, void* shaderByteCode, size_t sizeShader): AGameOb
 	};
 
 	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
-	vertex_buffer->loadQuad(plane_list, sizeof(Vertex), ARRAYSIZE(plane_list), shaderByteCode, sizeShader);
+	vertex_buffer->loadQuad(plane_list, sizeof(Vertex), ARRAYSIZE(plane_list),shaderByteCode,sizeShader);
 	CBData cbData = {};
 	cbData.m_time = 0;
 	this->cosntant_buffer = GraphicsEngine::get()->createConstantBuffer();
@@ -30,10 +35,14 @@ void Plane::update(float deltaTime)
 {
 }
 
-void Plane::draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader)
+void Plane::draw(int width, int height)
 {
+	ShaderNames shaderNames;
 	GraphicsEngine* graphics_engine = GraphicsEngine::get();
 	DeviceContext* device_context = graphics_engine->getImmediateDeviceContext();
+
+	device_context->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
+	device_context->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
 
 	CBData cbData = {};
 

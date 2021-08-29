@@ -2,7 +2,6 @@
 #include <iostream>
 #include <DirectXTex.h>
 #include "GraphicsEngine.h"
-#include <filesystem>
 
 Texture::Texture(const wchar_t* fullPath) : Resource(fullPath)
 {

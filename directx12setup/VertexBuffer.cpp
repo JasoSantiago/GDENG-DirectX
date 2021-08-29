@@ -107,4 +107,5 @@ bool VertexBuffer::release()
 
 VertexBuffer::~VertexBuffer()
 {
+
 }

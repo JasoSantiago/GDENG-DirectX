@@ -17,6 +17,8 @@
 //#include "Cube.h"
 #include "IndexBuffer.h"
 #include "AGameObject.h"
+#include "Mesh.h"
+#include "MeshGameObject.h"
 #include "Plane.h"
 #include "TexturedCube.h"
 
@@ -54,6 +56,10 @@ private:
 	ConstantBuffer* m_cb;
 	SoundClass* m_sound_class;
 	IndexBuffer* m_ib;
+	MeshGameObject* m_mgb;
+	MeshGameObject* m_mgb1;
+	MeshGameObject* m_mgb2;
+
 	unsigned long m_old_time = 0;
 	float m_angle = 0;
 	bool movement = true;

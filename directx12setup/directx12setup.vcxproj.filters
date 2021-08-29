@@ -106,6 +106,15 @@
     <Filter Include="GameEngine\GraphicsEngine\TexturedCube">
       <UniqueIdentifier>{81b7cbf8-6a73-4f25-87fc-a2722bfe7d11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\ShaderLibrary">
+      <UniqueIdentifier>{de2da93a-90fa-4148-836c-17dcc59e734a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager\MeshManager">
+      <UniqueIdentifier>{1718b3e2-c6c1-4fd3-8ab8-2dcada2f0c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\MeshGameObject">
+      <UniqueIdentifier>{1db44fdc-9e52-41d2-b0bc-1e8340ba054f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -227,6 +236,18 @@
     </ClCompile>
     <ClCompile Include="TexturedCube.cpp">
       <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLibrary.cpp">
+      <Filter>GameEngine\ShaderLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshGameObject.cpp">
+      <Filter>GameEngine\GraphicsEngine\MeshGameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +392,21 @@
     <ClInclude Include="TexturedCube.h">
       <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderLibrary.h">
+      <Filter>GameEngine\ShaderLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexMesh.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshGameObject.h">
+      <Filter>GameEngine\GraphicsEngine\MeshGameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -383,6 +419,12 @@
       <Filter>app</Filter>
     </FxCompile>
     <FxCompile Include="TexturedPixelShader.hlsl">
+      <Filter>app</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexMeshLayoutShader.hlsl">
+      <Filter>app</Filter>
+    </FxCompile>
+    <FxCompile Include="TeapotPixelShader.hlsl">
       <Filter>app</Filter>
     </FxCompile>
   </ItemGroup>

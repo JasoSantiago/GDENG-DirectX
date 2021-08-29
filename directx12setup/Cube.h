@@ -4,18 +4,18 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
-#include "Quad.h"
+#include "DeviceContext.h"
 #include "SceneCameraHandler.h"
 
 
 class Cube: public AGameObject
 {
 public:
-	Cube(std::string name, void* shaderByteCode, size_t sizeShader, bool skipint = false);
+	Cube(std::string name, bool skipint = false);
 	~Cube();
 
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader) override;
+	void draw(int width, int height) override;
 	void setAnimSpeed(float speed);
 	void rotateCubex(float value, float deltaTime); 
 	void rotateCubey(float value, float deltaTime);

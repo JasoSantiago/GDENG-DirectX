@@ -14,7 +14,7 @@ public:
 	~AGameObject();
 
 	virtual void update(float deltaTime) = 0;
-	virtual void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader);
+	virtual void draw(int width, int height);
 
 	void setPosition(float x, float y, float z);
 	void setPosition(Vector3D pos);
@@ -33,7 +33,7 @@ public:
 	std::string getName();
 	friend class GameObjectManager;
 
-	_declspec(align(16)) //make CBData a size of 16-bytes.
+	_declspec(align(16)) 
 		struct CBData {
 		Matrix4x4 m_world;
 		Matrix4x4 m_view;

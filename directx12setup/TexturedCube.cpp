@@ -1,10 +1,15 @@
 #include "TexturedCube.h"
 #include "SceneCameraHandler.h"
+#include "ShaderLibrary.h"
 #include "TextureManager.h"
 
-TexturedCube::TexturedCube(std::string name, void* shaderByteCode, size_t sizeShader) :AGameObject(name)
+TexturedCube::TexturedCube(std::string name) :Cube(name,true)
 {
-	std::cout << "constructed Textured Cube\n";
+	ShaderNames shaderNames;
+	void* shaderByteCode = NULL;
+	size_t sizeShader = 0;
+	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.TEXTURED_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
+
 	this->m_tex = TextureManager::getInstance()->createTextureFromFile(L"wood.jpg");
 	Vector3D positionList[] =
 	{
@@ -68,6 +73,7 @@ Vertex vertexList[] =
 	this->vertex_buffer->loadTexturedQuad(vertexList, sizeof(Vertex), ARRAYSIZE(vertexList), shaderByteCode, sizeShader);
 
 
+
 	unsigned int index_list[] =
 	{
 		 0,1,2,  //FIRST TRIANGLE
@@ -100,7 +106,7 @@ Vertex vertexList[] =
 	cbData.m_time = 0;
 	this->cosntant_buffer = GraphicsEngine::get()->createConstantBuffer();
 	this->cosntant_buffer->load(&cbData, sizeof(CBData));
-
+	
 }
 
 TexturedCube::~TexturedCube()
@@ -114,10 +120,17 @@ void TexturedCube::update(float deltaTime)
 {
 }
 
-void TexturedCube::draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader)
+void TexturedCube::draw(int width, int height)
 {
+	ShaderNames shaderNames;
 	GraphicsEngine* graphics_engine = GraphicsEngine::get();
 	DeviceContext* device_context = graphics_engine->getImmediateDeviceContext();
+
+
+	device_context->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.TEXTURED_VERTEX_SHADER_NAME));
+	device_context->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.TEXTURED_PIXEL_SHADER_NAME));
+
+
 
 	CBData cbData = {};
 
@@ -164,9 +177,8 @@ void TexturedCube::draw(int width, int height, VertexShader* vertex_shader, Pixe
 	cbData.m_proj = SceneCameraHandler::getInstance()->getProjectionViewMatrix();
 	this->cosntant_buffer->update(device_context, &cbData);
 	device_context->setConstantBuffer(this->cosntant_buffer);
-
+	device_context->setTexture(this->m_tex);
 	device_context->setIndexBuffer(this->index_buffer);
 	device_context->setVertexBuffer(this->vertex_buffer);
-	device_context->setTexture(this->m_tex);
 	device_context->drawIndexedTriangleList(this->index_buffer->getSizeIndexList(), 0, 0);
 }

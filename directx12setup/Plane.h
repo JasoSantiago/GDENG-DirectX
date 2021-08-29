@@ -9,10 +9,10 @@
 class Plane: public AGameObject
 {
 public:
-	Plane(std::string name, void* shaderByteCode, size_t sizeShader);
+	Plane(std::string name);
 	~Plane();
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader) override;
+	void draw(int width, int height) override;
 
 private:
 	VertexBuffer* vertex_buffer;

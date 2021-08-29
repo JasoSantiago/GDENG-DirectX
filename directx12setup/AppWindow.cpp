@@ -4,7 +4,9 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
+#include "MeshManager.h"
 #include "SceneCameraHandler.h"
+#include "ShaderLibrary.h"
 #include "UIManager.h"
 #include "imGUI/imgui.h"
 #include "imGUI/imgui_impl_dx11.h"
@@ -36,7 +38,8 @@ void AppWindow::onCreate()
 	InputSystem::initialize();
 	SceneCameraHandler::initialize();
 	GraphicsEngine::get()->init();
-	
+	ShaderLibrary::initialize();
+	MeshManager::initialize();
 	m_swap_chain = GraphicsEngine::get()->createSwapChain();
 
 	RECT rc = this->getClientWindowRect();
@@ -47,28 +50,27 @@ void AppWindow::onCreate()
 	SceneCameraHandler::getInstance()->getSceneCamera()->setDimensions(m_width, m_height);
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
-	GraphicsEngine::get()->compileVertexShader(L"TextureVertexShader.hlsl", "main", &shader_byte_code, &size_shader);
-	//GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 
-	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 	GameObjectManager::initialize();
 	TextureManager::initialize();
-	Texture* tex = TextureManager::getInstance()->createTextureFromFile(L"wood.jpg");
 
-	//Cubelist.push_back(new Cube("textCube", shader_byte_code, size_shader));
-	textCube = new TexturedCube("Cube", shader_byte_code, size_shader);
-	textCube->setPosition(0.0f, 0.0f, 0.0f);
-	textCube->setScale(1.0f, 1.0f, 1.0f);
-	GameObjectManager::getInstance()->addObject(textCube);
+	m_mgb = new MeshGameObject("teapot", L"teapot.obj", L"brick.png");
+	m_mgb1 = new MeshGameObject("bunny", L"bunny.obj", L"");
+	m_mgb2 = new MeshGameObject("armadillo", L"armadillo.obj", L"");
+
+	m_mgb->setPosition(0.0f, 0.0f, 0.0f);
+	m_mgb1->setPosition(1.0f, 0.0f, 0.0f);
+	m_mgb2->setPosition(-1.0f, 0.0f, 0.0f);
+	m_mgb->setScale(1.0f, 1.0f, 1.0f);
+	m_mgb1->setScale(1.0f, 1.0f, 1.0f);
+	m_mgb2->setScale(1.0f, 1.0f, 1.0f);
+	GameObjectManager::getInstance()->addObject(m_mgb);
+	GameObjectManager::getInstance()->addObject(m_mgb1);
+	GameObjectManager::getInstance()->addObject(m_mgb2);
 	GraphicsEngine::get()->releaseCompiledShader();
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
-
 	GraphicsEngine::get()->releaseCompiledShader();
 
-	GraphicsEngine::get()->compilePixelShader(L"TexturedPixelShader.hlsl", "main", &shader_byte_code, &size_shader);
-	//GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
-	GraphicsEngine::get()->releaseCompiledShader();
 
 	UIManager::initialize(this->m_hwnd);
 }
@@ -79,20 +81,14 @@ void AppWindow::onUpdate()
 
 	InputSystem::getInstance()->update();
 	SceneCameraHandler::getInstance()->update();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
 	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.3f, 0.4f, 1);
 
 
 	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
-
-	//Cubelist[0]->draw(m_width, m_height, m_vs, m_ps);
-	textCube->draw(m_width,m_height,m_vs,m_ps);
-	
-	GameObjectManager::getInstance()->updateAll();
-	GameObjectManager::getInstance()->renderAll(m_width, m_height, m_vs, m_ps);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);;
+	GameObjectManager::getInstance()->updateAllObjects();
+	GameObjectManager::getInstance()->renderAllObjects(m_width, m_height);
 	UIManager::getInstance()->drawAllUI();
 
 	m_swap_chain->present(true);
@@ -100,21 +96,29 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
-	
-	Window::onDestroy();
-	//m_vb->release();
-	//m_ib->release();
-	//m_cb->release();
-	m_swap_chain->release();
-	m_vs->release();
-	m_ps->release();
+	ShaderLibrary::destroy();
 	SceneCameraHandler::destroy();
-	//TextureManager::destroy();
-	GraphicsEngine::get()->release();
+	TextureManager::destroy();
+	MeshManager::destroy();
+	GameObjectManager::destroy();
+	Window::onDestroy();
+	InputSystem::getInstance()->removeListener(this);
+	InputSystem::getInstance()->destroy();
+	/*this->m_vb->release();
+	this->m_ib->release();
+	this->m_cb->release();*/
+	this->m_swap_chain->release();
+	//this->vertexShader->release();
+	//this->pixelShader->release();
 
+	GraphicsEngine::get()->release();
+	
+
+	// IMGUI Cleanup
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
 }
 
 void AppWindow::onFocus()

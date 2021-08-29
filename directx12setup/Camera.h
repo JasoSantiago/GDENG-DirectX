@@ -13,7 +13,7 @@ public:
 	void setDimensions(float width, float height);
 	Matrix4x4 getViewMatrix();
 	Matrix4x4 getProjMatrix();
-	virtual void draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader) override;
+	virtual void draw(int width, int height) override;
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
 	virtual void onMouseMove(const Point& delta_mouse_pos) override;

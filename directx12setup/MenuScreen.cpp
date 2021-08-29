@@ -22,9 +22,9 @@ void MenuScreen::drawUI()
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("Game Object")) {
 			if (ImGui::MenuItem("Create Cube")) { this->OnCreateCubeClicked(); }
-			if (ImGui::MenuItem("Create Sphere")) { this->OnCreateSphereClicked(); }
 			if (ImGui::MenuItem("Create Plane")) { this->OnCreatePlaneClicked(); }
 			if(ImGui::MenuItem("Create Color Picker")) { this->onCreateColorPicker(); }
+			if (ImGui::MenuItem("Create Textured Cube")) { this->onCreateTexturedCubeClicked(); }
 			ImGui::EndMenu();
 		}
 		if(ImGui::BeginMenu("About"))
@@ -38,32 +38,14 @@ void MenuScreen::drawUI()
 
 void MenuScreen::OnCreateCubeClicked()
 {
-	void* shaderByteCode = nullptr;
-	size_t sizeShader = 0;
-	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
-	VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
-	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE, shaderByteCode, sizeShader);
-	vertexShader->release();
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE);
 	std::cout << "cube Created \n";
-}
-
-void MenuScreen::OnCreateSphereClicked()
-{
-	std::cout << "Creating sphere placeholder. \n";
 }
 
 void MenuScreen::OnCreatePlaneClicked()
 {
-	void* shaderByteCode = nullptr;
-	size_t sizeShader = 0;
-	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
-	VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
 
-	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE, shaderByteCode, sizeShader);
-
-	vertexShader->release();
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE);
 	std::cout << "creating Plane\n";
 }
 
@@ -75,4 +57,9 @@ void MenuScreen::onCreateCreditsClicked()
 void MenuScreen::onCreateColorPicker()
 {
 	UIManager::getInstance()->createColorPicker();
+}
+
+void MenuScreen::onCreateTexturedCubeClicked()
+{
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTUREDCUBE);
 }

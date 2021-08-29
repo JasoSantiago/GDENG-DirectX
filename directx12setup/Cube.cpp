@@ -1,12 +1,19 @@
 #include "Cube.h"
 
+#include "ShaderLibrary.h"
 
-Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader, bool skipinit): AGameObject(name)
+
+Cube::Cube(std::string name, bool skipinit): AGameObject(name)
 {
 	if(skipinit)
 	{
 		return;
 	}
+
+	ShaderNames shaderNames;
+	void* shaderByteCode = NULL;
+	size_t sizeShader = 0;
+	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
 
 	std::cout << "created Cube";
 	Vertex vertex_list[] =
@@ -79,10 +86,14 @@ void Cube::update(float deltaTime)
 	this->setRotation(this->rot_x, this->rot_y, 0.0f);
 }
 
-void Cube::draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader)
+void Cube::draw(int width, int height)
 {
+	ShaderNames shaderNames;
 	GraphicsEngine* graphics_engine = GraphicsEngine::get();
 	DeviceContext* device_context = graphics_engine->getImmediateDeviceContext();
+
+	device_context->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
+	device_context->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
 
 	CBData cbData = {};
 

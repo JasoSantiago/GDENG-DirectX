@@ -3,13 +3,13 @@
 #include "Cube.h"
 #include "Vector2D.h"
 
-class TexturedCube : public AGameObject
+class TexturedCube : public Cube
 {
 public:
-	TexturedCube(std::string name, void* shaderByteCode, size_t sizeShader);
+	TexturedCube(std::string name);
 	~TexturedCube();
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader) override;
+	void draw(int width, int height) override;
 private:
 	struct Vertex {
 		Vector3D position;

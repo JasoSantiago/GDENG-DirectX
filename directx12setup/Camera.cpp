@@ -75,7 +75,7 @@ Matrix4x4 Camera::getProjMatrix()
 	}
 }
 
-void Camera::draw(int width, int height, VertexShader* vertex_shader, PixelShader* pixel_shader)
+void Camera::draw(int width, int height)
 {
 }
 

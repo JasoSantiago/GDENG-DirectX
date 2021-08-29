@@ -1,6 +1,5 @@
 #include "TextureManager.h"
 #include "Texture.h"
-#include <filesystem>
 
 TextureManager* TextureManager::sharedInstance = NULL;
 
@@ -35,7 +34,6 @@ TextureManager::TextureManager():ResourceManager()
 
 TextureManager::~TextureManager()
 {
-    ResourceManager::~ResourceManager();
 }
 
 Resource* TextureManager::convertToResource(const wchar_t* filePath)
