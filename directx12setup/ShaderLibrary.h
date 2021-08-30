@@ -38,8 +38,6 @@ public:
 private:
 	ShaderLibrary();
 	~ShaderLibrary();
-	ShaderLibrary(ShaderLibrary const&) {};             
-	ShaderLibrary& operator=(ShaderLibrary const&) {}; 
 	static ShaderLibrary* sharedInstance;
 
 	std::unordered_map<std::wstring, VertexShader*> activeVertexShaders;

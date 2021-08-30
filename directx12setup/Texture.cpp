@@ -31,7 +31,7 @@ Texture::~Texture()
 	this->m_Texture->Release();
 }
 
-Resource::String Texture::getPath()
+std::wstring Texture::getPath()
 {
 	return this->fullPath;
 }

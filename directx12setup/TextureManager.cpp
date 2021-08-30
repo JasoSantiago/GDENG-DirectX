@@ -38,12 +38,12 @@ TextureManager::~TextureManager()
 
 Resource* TextureManager::convertToResource(const wchar_t* filePath)
 {
-	Texture* tex = nullptr;
+	Texture* m_tex = nullptr;
 	try
 	{
-		tex = new Texture(filePath);
+		m_tex = new Texture(filePath);
 	}
 	catch (...) {}
 
-	return tex;
+	return m_tex;
 }

@@ -83,7 +83,7 @@ Mesh::~Mesh()
 	Resource::~Resource();
 }
 
-Resource::String Mesh::getPath()
+std::wstring Mesh::getPath()
 {
 	return this->fullPath;
 }

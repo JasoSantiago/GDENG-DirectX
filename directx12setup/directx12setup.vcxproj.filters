@@ -49,20 +49,11 @@
     <Filter Include="GameEngine\GraphicsEngine\AGameObject">
       <UniqueIdentifier>{b3575f5c-965e-48e1-9601-0941bd080985}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Cube">
-      <UniqueIdentifier>{6dd4c31c-f98c-4284-abf6-baa3f934bef2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\GraphicsEngine\Input System">
       <UniqueIdentifier>{2f437fa1-775d-49d0-8824-6078999d9ba5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\Camera">
-      <UniqueIdentifier>{4a70e678-d95c-4782-8c02-96a8ffe3d186}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\SceneCameraHandler">
       <UniqueIdentifier>{03ef2c2b-3dad-4b2a-8ad9-cb214063d5ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\plane">
-      <UniqueIdentifier>{39b27fd1-bcf2-4707-99e0-04fafd55b1ac}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameEngine\GraphicsEngine\ImGui">
       <UniqueIdentifier>{73de6fe0-13e4-470d-b4c4-1cd3ecffb0fa}</UniqueIdentifier>
@@ -103,17 +94,38 @@
     <Filter Include="GameEngine\GraphicsEngine\TextureManager">
       <UniqueIdentifier>{94e9fa81-79f4-4908-884a-4f1617925093}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\TexturedCube">
-      <UniqueIdentifier>{81b7cbf8-6a73-4f25-87fc-a2722bfe7d11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\ShaderLibrary">
       <UniqueIdentifier>{de2da93a-90fa-4148-836c-17dcc59e734a}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameEngine\GraphicsEngine\ResourceManager\MeshManager">
       <UniqueIdentifier>{1718b3e2-c6c1-4fd3-8ab8-2dcada2f0c63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\MeshGameObject">
+    <Filter Include="GameEngine\PhysicsSystem">
+      <UniqueIdentifier>{27dbd016-f268-4313-a9cb-d7c83d7b19bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\BaseComponentSystem">
+      <UniqueIdentifier>{dbbc5b59-e774-4588-aeec-78bcc7c3cc11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\AcomponentSystem">
+      <UniqueIdentifier>{3622eae3-04e8-4642-9311-93e08d3a67d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects">
+      <UniqueIdentifier>{270c45d6-dc5a-4394-91c7-99db7a4b6bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\Cube">
+      <UniqueIdentifier>{6dd4c31c-f98c-4284-abf6-baa3f934bef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\TexturedCube">
+      <UniqueIdentifier>{81b7cbf8-6a73-4f25-87fc-a2722bfe7d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\plane">
+      <UniqueIdentifier>{39b27fd1-bcf2-4707-99e0-04fafd55b1ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\MeshGameObject">
       <UniqueIdentifier>{1db44fdc-9e52-41d2-b0bc-1e8340ba054f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\Camera">
+      <UniqueIdentifier>{4a70e678-d95c-4782-8c02-96a8ffe3d186}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,19 +175,19 @@
       <Filter>GameEngine\GraphicsEngine\AGameObject</Filter>
     </ClCompile>
     <ClCompile Include="Cube.cpp">
-      <Filter>GameEngine\GraphicsEngine\Cube</Filter>
+      <Filter>GameEngine\GameObjects\Cube</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>GameEngine\GraphicsEngine\Input System</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>GameEngine\Camera</Filter>
+      <Filter>GameEngine\GameObjects\Camera</Filter>
     </ClCompile>
     <ClCompile Include="SceneCameraHandler.cpp">
       <Filter>GameEngine\SceneCameraHandler</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
-      <Filter>GameEngine\plane</Filter>
+      <Filter>GameEngine\GameObjects\plane</Filter>
     </ClCompile>
     <ClCompile Include="imGUI\imgui.cpp">
       <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
@@ -235,7 +247,7 @@
       <Filter>GameEngine\GraphicsEngine\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="TexturedCube.cpp">
-      <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
+      <Filter>GameEngine\GameObjects\TexturedCube</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLibrary.cpp">
       <Filter>GameEngine\ShaderLibrary</Filter>
@@ -247,7 +259,19 @@
       <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
     </ClCompile>
     <ClCompile Include="MeshGameObject.cpp">
-      <Filter>GameEngine\GraphicsEngine\MeshGameObject</Filter>
+      <Filter>GameEngine\GameObjects\MeshGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>GameEngine\PhysicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseComponentSystem.cpp">
+      <Filter>GameEngine\BaseComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AComponentSystem.cpp">
+      <Filter>GameEngine\AcomponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>GameEngine\PhysicsSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -300,7 +324,7 @@
       <Filter>GameEngine\GraphicsEngine\AGameObject</Filter>
     </ClInclude>
     <ClInclude Include="Cube.h">
-      <Filter>GameEngine\GraphicsEngine\Cube</Filter>
+      <Filter>GameEngine\GameObjects\Cube</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
       <Filter>GameEngine\GraphicsEngine\Input System</Filter>
@@ -315,13 +339,13 @@
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>GameEngine\Camera</Filter>
+      <Filter>GameEngine\GameObjects\Camera</Filter>
     </ClInclude>
     <ClInclude Include="SceneCameraHandler.h">
       <Filter>GameEngine\SceneCameraHandler</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
-      <Filter>GameEngine\plane</Filter>
+      <Filter>GameEngine\GameObjects\plane</Filter>
     </ClInclude>
     <ClInclude Include="imGUI\imconfig.h">
       <Filter>GameEngine\GraphicsEngine\ImGui</Filter>
@@ -390,7 +414,7 @@
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="TexturedCube.h">
-      <Filter>GameEngine\GraphicsEngine\TexturedCube</Filter>
+      <Filter>GameEngine\GameObjects\TexturedCube</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLibrary.h">
       <Filter>GameEngine\ShaderLibrary</Filter>
@@ -405,7 +429,19 @@
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="MeshGameObject.h">
-      <Filter>GameEngine\GraphicsEngine\MeshGameObject</Filter>
+      <Filter>GameEngine\GameObjects\MeshGameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>GameEngine\PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseComponentSystem.h">
+      <Filter>GameEngine\BaseComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="AComponentSystem.h">
+      <Filter>GameEngine\AcomponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>GameEngine\PhysicsSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

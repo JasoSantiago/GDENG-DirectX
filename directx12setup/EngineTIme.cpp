@@ -30,6 +30,5 @@ void EngineTime::LogFrameEnd()
 	sharedInstance->end = std::chrono::system_clock::now();
 	std::chrono::duration<double> elapsed_seconds = sharedInstance->end - sharedInstance->start;
 
-	//std::cout << sharedInstance->deltaTime << std::endl;
 	sharedInstance->deltaTime = elapsed_seconds.count();
 }

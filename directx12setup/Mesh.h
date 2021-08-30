@@ -9,7 +9,7 @@ class Mesh: public Resource
 public:
 	Mesh(const wchar_t* fullPath);
 	~Mesh();
-	Resource::String getPath();
+	std::wstring getPath();
 	VertexBuffer* getVertexBuffer();
 	IndexBuffer* getIndexBuffer();
 	void drawMesh(float witdh, float height);

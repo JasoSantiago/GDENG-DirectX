@@ -10,7 +10,6 @@ Camera::Camera(std::string name): AGameObject(name)
 	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
 
 	this->setPosition(0.0f, 0.0f, -4.0f);
-	//this->worldCameraMatrix.setTranslation(this->getLocalPosition());
 	this->updateViewMatrix();
 	InputSystem::getInstance()->addListener(this);
 }
@@ -21,7 +20,6 @@ Camera::Camera(float width, float height): AGameObject("Camera")
 	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
 
 	this->setPosition(0.0f, 0.0f, -4.0f);
-	//this->worldCameraMatrix.setTranslation(this->getLocalPosition());
 	this->updateViewMatrix();
 	InputSystem::getInstance()->addListener(this);
 	m_width = width;
@@ -89,39 +87,19 @@ void Camera::onKeyDown(int key)
 	if (key == 'W')
 	{
 		forward = 1.0f;
-		//z += deltaTime * moveSpeed;
-		//this->setPosition(x, y, z);
-		
 	}
 	else if (key == 'S')
 	{
 		forward = -1.0f;
-			//z -= deltaTime * moveSpeed;
-			//this->setPosition(x, y, z);
 	}
 	else if (key == 'A')
 	{
 		rightward = -1.0f;
-			//x -= deltaTime * moveSpeed;
-			//this->setPosition(x, y, z);
 
 	}
 	else if (key == 'D')
 	{
 		rightward = 1.0f;
-			//x += deltaTime * moveSpeed;
-			//this->setPosition(x, y, z);
-	}
-	else if(key == 'Q')
-	{
-		//y += deltaTime * moveSpeed;
-		//this->setPosition(x, y, z);
-	}
-
-	else if (key == 'E')
-	{
-		//y -= deltaTime * moveSpeed;
-		//this->setPosition(x, y, z);
 	}
 	else if(key == 'Z')
 	{

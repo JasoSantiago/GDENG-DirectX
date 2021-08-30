@@ -19,7 +19,7 @@ void InspectorScreen::drawUI()
 	ImGui::SetWindowSize(ImVec2(250, UIManager::WINDOW_HEIGHT));
 	this->selectedObject = GameObjectManager::getInstance()->getSelectedObject();
 	if (this->selectedObject != NULL) {
-		String name = this->selectedObject->getName();
+		std::string name = this->selectedObject->getName();
 		ImGui::Text("Selected Object: %s", name.c_str());
 
 		this->updateTransformDisplays();

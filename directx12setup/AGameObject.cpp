@@ -70,6 +70,59 @@ std::string AGameObject::getName()
 	return this->name;
 }
 
+float* AGameObject::getPhysicsLocalMatrix()
+{
+	Matrix4x4 allMatrix; allMatrix.setIdentity();
+	Matrix4x4 translationMatrix; translationMatrix.setIdentity();
+	translationMatrix.setTranslation(this->getLocalPosition());
+	Matrix4x4 scaleMatrix; scaleMatrix.setScale(Vector3D::ones());
+	Vector3D rotation = this->getRotation();
+	Matrix4x4 xMatrix; xMatrix.setRotationX(rotation.m_x);
+	Matrix4x4 yMatrix; yMatrix.setRotationY(rotation.m_y);
+	Matrix4x4 zMatrix; zMatrix.setRotationZ(rotation.m_z);
+
+	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	yMatrix *= zMatrix;
+	xMatrix *= yMatrix;
+	rotMatrix *= xMatrix;
+	scaleMatrix *= rotMatrix;
+	allMatrix *= scaleMatrix;
+	allMatrix *= translationMatrix;
+
+	return allMatrix.getMatrix();
+}
+
+void AGameObject::setLocalMatrix(float matrix[16])
+{
+	float matrix4x4[4][4];
+	matrix4x4[0][0] = matrix[0];
+	matrix4x4[0][1] = matrix[1];
+	matrix4x4[0][2] = matrix[2];
+	matrix4x4[0][3] = matrix[3];
+
+	matrix4x4[1][0] = matrix[4];
+	matrix4x4[1][1] = matrix[5];
+	matrix4x4[1][2] = matrix[6];
+	matrix4x4[1][3] = matrix[7];
+
+	matrix4x4[2][0] = matrix[8];
+	matrix4x4[2][1] = matrix[9];
+	matrix4x4[2][2] = matrix[10];
+	matrix4x4[2][3] = matrix[11];
+
+	matrix4x4[3][0] = matrix[12];
+	matrix4x4[3][1] = matrix[13];
+	matrix4x4[3][2] = matrix[14];
+	matrix4x4[3][3] = matrix[15];
+
+	Matrix4x4 newMatrix; newMatrix.setMatrix(matrix4x4);
+	Matrix4x4 scaleMatrix; scaleMatrix.setScale(this->localScale);
+	Matrix4x4 transMatrix; transMatrix.setTranslation(this->localPosition);
+	transMatrix *= newMatrix;
+	scaleMatrix *= transMatrix;
+	this->localMatrix = scaleMatrix;
+}
+
 bool AGameObject::isEnabled()
 {
 	return this->enabled;

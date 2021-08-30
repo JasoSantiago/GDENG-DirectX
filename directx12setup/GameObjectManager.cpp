@@ -31,8 +31,8 @@ AGameObject* GameObjectManager::findObjectByName(std::string name)
 		return this->gameObjectMap[name];
 	}
 	else {
-		std::cout << "Object " << name << " not found!";
-		return NULL;
+		std::cout << "Object does not exist";
+		return nullptr;
 	}
 }
 
@@ -67,11 +67,11 @@ void GameObjectManager::addObject(AGameObject* gameObject)
 {
 	//used to generate the name of the objects so that they don't overlap
 	if (this->gameObjectMap[gameObject->getName()] != nullptr) {
-		int count = 1;
-		String revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
+		int number = 1;
+		String revisedString = gameObject->getName() + std::to_string(number);
 		while (this->gameObjectMap[revisedString] != nullptr) {
-			count++;
-			revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
+			number++;
+			revisedString = gameObject->getName() + std::to_string(number);
 		}
 		gameObject->name = revisedString;
 		this->gameObjectMap[revisedString] = gameObject;
@@ -120,7 +120,10 @@ void GameObjectManager::deleteObject(AGameObject* gameObject)
 	if (index != -1) {
 		this->gameObjectList.erase(this->gameObjectList.begin() + index);
 	}
-
+	else
+	{
+		std::cout << "Game Object does not exist";
+	}
 	delete gameObject;
 }
 

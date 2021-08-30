@@ -1,12 +1,12 @@
 #include "AUIScreen.h"
 
 
-AUIScreen::AUIScreen(String name)
+AUIScreen::AUIScreen(std::string name)
 {
 	this->name = name;
 }
 
-String AUIScreen::getName()
+std::string AUIScreen::getName()
 {
 	return this->name;
 }

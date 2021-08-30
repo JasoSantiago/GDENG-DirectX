@@ -15,8 +15,6 @@ public:
 private:
 	EngineTime();
 	~EngineTime();
-	EngineTime(EngineTime const&) {};
-	EngineTime& operator = (EngineTime const&) {};
 
 	static EngineTime* sharedInstance;
 

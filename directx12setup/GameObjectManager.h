@@ -38,8 +38,6 @@ public:
 private:
 	GameObjectManager();
 	~GameObjectManager();
-	GameObjectManager(GameObjectManager const&) {};             // copy constructor is private
-	GameObjectManager& operator=(GameObjectManager const&) {};  // assignment operator is private*/
 	static GameObjectManager* sharedInstance;
 
 	HashTable gameObjectMap;

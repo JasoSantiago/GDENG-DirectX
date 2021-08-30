@@ -15,8 +15,6 @@ public:
 private:
 	SceneCameraHandler();
 	~SceneCameraHandler();
-	SceneCameraHandler(SceneCameraHandler const&) {};           
-	SceneCameraHandler& operator=(SceneCameraHandler const&) {};  
 	static SceneCameraHandler* sharedInstance;
 
 	Camera* sceneCamera;

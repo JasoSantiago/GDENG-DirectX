@@ -13,8 +13,6 @@
 #include "InputListener.h"
 #include "Matrix4x4.h"
 #include "SoundClass.h"
-//#include "Quad.h"
-//#include "Cube.h"
 #include "IndexBuffer.h"
 #include "AGameObject.h"
 #include "Mesh.h"

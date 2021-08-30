@@ -1,21 +1,19 @@
 #pragma once
 #include <string>
 
-typedef std::string String;
 class UIManager;
 
 class AUIScreen
 {
 protected:
-	typedef std::string String;
 
-	AUIScreen(String name);
+	AUIScreen(std::string name);
 	~AUIScreen();
 
-	String getName();
+	std::string getName();
 	virtual void drawUI() = 0;
 
-	String name;
+	std::string name;
 
 	friend class UIManager;
 };

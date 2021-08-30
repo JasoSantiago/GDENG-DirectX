@@ -7,7 +7,7 @@ class Texture : public Resource
 public:
 	Texture(const wchar_t* fullPath);
 	~Texture();
-	Resource::String getPath();
+	std::wstring getPath();
 	ID3D11ShaderResourceView* getShaderResource();
 
 private:

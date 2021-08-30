@@ -127,7 +127,8 @@ void Cube::draw(int width, int height)
 	allMatrix *= scaleMatrix;
 	allMatrix *= translationMatrix;
 	//allMatrix.printMatrix();
-	cbData.m_world = allMatrix;
+	this->localMatrix = allMatrix;
+	cbData.m_world = this->localMatrix;
 
 	//cbData.m_view.setIdentity();
 	//cbData.m_proj.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);

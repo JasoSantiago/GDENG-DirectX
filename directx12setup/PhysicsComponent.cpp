@@ -1,0 +1,49 @@
+
+#include "PhysicsComponent.h"
+#include "BaseComponentSystem.h"
+#include "PhysicsSystem.h"
+#include "AGameObject.h"
+#include "Vector3D.h"
+
+PhysicsComponent::PhysicsComponent(std::string name, AGameObject* owner): AComponentSystem(name, AComponentSystem::ComponentType::Physics, owner)
+{
+	BaseComponentSystem::getInstance()->getPhysicsSystem()->registerComponent(this);
+	PhysicsCommon* physicsCommon = BaseComponentSystem::getInstance()->getPhysicsSystem()->getPhysicsCommon();
+	PhysicsWorld* physicsWorld = BaseComponentSystem::getInstance()->getPhysicsSystem()->getPhysicsWorld();
+
+
+	Vector3D scale = this->getOwner()->getLocalScale();
+	Transform transform; transform.setFromOpenGL(this->getOwner()->getPhysicsLocalMatrix());
+	BoxShape* boxShape = physicsCommon->createBoxShape(Vector3(scale.getX() / 2, scale.getY() / 2, scale.getZ() / 2)); //half extent
+	this->rigidBody = physicsWorld->createRigidBody(transform);
+	this->rigidBody->addCollider(boxShape, transform);
+	this->rigidBody->updateMassPropertiesFromColliders();
+	this->rigidBody->setMass(this->mass);
+	this->rigidBody->setType(BodyType::DYNAMIC);
+
+	transform = this->rigidBody->getTransform();
+	float matrix[16];
+	transform.getOpenGLMatrix(matrix);
+
+	this->getOwner()->setLocalMatrix(matrix);
+}
+
+PhysicsComponent::~PhysicsComponent()
+{
+	AComponentSystem::~AComponentSystem();
+	BaseComponentSystem::getInstance()->getPhysicsSystem()->unregisterComponent(this);
+}
+
+void PhysicsComponent::perform(float delta_time)
+{
+	const Transform transform = this->rigidBody->getTransform();
+	float matrix[16];
+	transform.getOpenGLMatrix(matrix);
+
+	this->getOwner()->setLocalMatrix(matrix);
+}
+
+RigidBody* PhysicsComponent::getRigidBody()
+{
+	return this->rigidBody;
+}

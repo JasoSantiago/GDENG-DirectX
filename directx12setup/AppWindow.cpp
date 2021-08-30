@@ -112,9 +112,7 @@ void AppWindow::onDestroy()
 	//this->pixelShader->release();
 
 	GraphicsEngine::get()->release();
-	
 
-	// IMGUI Cleanup
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

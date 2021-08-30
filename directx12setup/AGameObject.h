@@ -31,6 +31,9 @@ public:
 	bool isEnabled();
 	void setEnabled(bool flag);
 	std::string getName();
+
+	float* getPhysicsLocalMatrix();
+	void setLocalMatrix(float matrix[16]);
 	friend class GameObjectManager;
 
 	_declspec(align(16)) 
