@@ -1,10 +1,15 @@
 #include "AppWindow.h"
 #include <Windows.h>
+
+#include "BaseComponentSystem.h"
 #include "GameObjectManager.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 #include "MeshManager.h"
+#include "PhysicsCube.h"
+#include "PhysicsPlane.h"
+#include "PhysicsSystem.h"
 #include "SceneCameraHandler.h"
 #include "ShaderLibrary.h"
 #include "UIManager.h"
@@ -40,6 +45,7 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->init();
 	ShaderLibrary::initialize();
 	MeshManager::initialize();
+	BaseComponentSystem::initialize();
 	m_swap_chain = GraphicsEngine::get()->createSwapChain();
 
 	RECT rc = this->getClientWindowRect();
@@ -54,19 +60,24 @@ void AppWindow::onCreate()
 	GameObjectManager::initialize();
 	TextureManager::initialize();
 
-	m_mgb = new MeshGameObject("teapot", L"teapot.obj", L"brick.png");
-	m_mgb1 = new MeshGameObject("bunny", L"bunny.obj", L"");
-	m_mgb2 = new MeshGameObject("armadillo", L"armadillo.obj", L"");
+	//teapot
+	//m_mgb = new MeshGameObject("teapot", L"teapot.obj", L"brick.png");
+	//m_mgb->setPosition(0.0f, 0.0f, 0.0f);
+	//m_mgb->setScale(1.0f, 1.0f, 1.0f);
+	//GameObjectManager::getInstance()->addObject(m_mgb);
 
-	m_mgb->setPosition(0.0f, 0.0f, 0.0f);
-	m_mgb1->setPosition(1.0f, 0.0f, 0.0f);
-	m_mgb2->setPosition(-1.0f, 0.0f, 0.0f);
-	m_mgb->setScale(1.0f, 1.0f, 1.0f);
-	m_mgb1->setScale(1.0f, 1.0f, 1.0f);
-	m_mgb2->setScale(1.0f, 1.0f, 1.0f);
-	GameObjectManager::getInstance()->addObject(m_mgb);
-	GameObjectManager::getInstance()->addObject(m_mgb1);
-	GameObjectManager::getInstance()->addObject(m_mgb2);
+	//bunny
+	//m_mgb1 = new MeshGameObject("bunny", L"bunny.obj", L"");
+	//m_mgb1->setPosition(1.0f, 0.0f, 0.0f);
+	//m_mgb1->setScale(1.0f, 1.0f, 1.0f);
+
+	//armadillo
+	//m_mgb2 = new MeshGameObject("armadillo", L"armadillo.obj", L"");
+	//m_mgb2->setPosition(-1.0f, 0.0f, 0.0f);
+	//m_mgb2->setScale(1.0f, 1.0f, 1.0f);
+	
+	//GameObjectManager::getInstance()->addObject(m_mgb1);
+	//GameObjectManager::getInstance()->addObject(m_mgb2);
 	GraphicsEngine::get()->releaseCompiledShader();
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 	GraphicsEngine::get()->releaseCompiledShader();
@@ -84,10 +95,10 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.3f, 0.4f, 1);
 
-
 	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);;
+	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
 	GameObjectManager::getInstance()->updateAllObjects();
+	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
 	GameObjectManager::getInstance()->renderAllObjects(m_width, m_height);
 	UIManager::getInstance()->drawAllUI();
 

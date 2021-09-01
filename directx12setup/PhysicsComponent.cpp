@@ -14,7 +14,7 @@ PhysicsComponent::PhysicsComponent(std::string name, AGameObject* owner): ACompo
 
 	Vector3D scale = this->getOwner()->getLocalScale();
 	Transform transform; transform.setFromOpenGL(this->getOwner()->getPhysicsLocalMatrix());
-	BoxShape* boxShape = physicsCommon->createBoxShape(Vector3(scale.getX() / 2, scale.getY() / 2, scale.getZ() / 2)); //half extent
+	BoxShape* boxShape = physicsCommon->createBoxShape(Vector3(scale.getX() / 2, scale.getY() / 2, scale.getZ() / 2));
 	this->rigidBody = physicsWorld->createRigidBody(transform);
 	this->rigidBody->addCollider(boxShape, transform);
 	this->rigidBody->updateMassPropertiesFromColliders();

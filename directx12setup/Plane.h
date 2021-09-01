@@ -9,12 +9,12 @@
 class Plane: public AGameObject
 {
 public:
-	Plane(std::string name);
+	Plane(std::string name, bool skipinit);
 	~Plane();
 	void update(float deltaTime) override;
 	void draw(int width, int height) override;
 
-private:
+protected:
 	VertexBuffer* vertex_buffer;
 	IndexBuffer* index_buffer;
 	ConstantBuffer* cosntant_buffer;

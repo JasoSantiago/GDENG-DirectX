@@ -25,6 +25,8 @@ void MenuScreen::drawUI()
 			if (ImGui::MenuItem("Create Plane")) { this->OnCreatePlaneClicked(); }
 			if(ImGui::MenuItem("Create Color Picker")) { this->onCreateColorPicker(); }
 			if (ImGui::MenuItem("Create Textured Cube")) { this->onCreateTexturedCubeClicked(); }
+			if (ImGui::MenuItem("Create Physics Cubes")) { this->onCreatePhysicsCubeClicked(); }
+			if (ImGui::MenuItem("Create Physics Plane")) { this->onCreatePhysicsPlaneClicked(); }
 			ImGui::EndMenu();
 		}
 		if(ImGui::BeginMenu("About"))
@@ -62,4 +64,14 @@ void MenuScreen::onCreateColorPicker()
 void MenuScreen::onCreateTexturedCubeClicked()
 {
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTUREDCUBE);
+}
+
+void MenuScreen::onCreatePhysicsCubeClicked()
+{
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICSCUBE);
+}
+
+void MenuScreen::onCreatePhysicsPlaneClicked()
+{
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICSPLANE);
 }

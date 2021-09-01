@@ -46,9 +46,6 @@
     <Filter Include="GameEngine\GraphicsEngine\IndexBuffer">
       <UniqueIdentifier>{b874a094-db96-4b67-9cb1-1277eeb4c22a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\AGameObject">
-      <UniqueIdentifier>{b3575f5c-965e-48e1-9601-0941bd080985}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\GraphicsEngine\Input System">
       <UniqueIdentifier>{2f437fa1-775d-49d0-8824-6078999d9ba5}</UniqueIdentifier>
     </Filter>
@@ -127,6 +124,15 @@
     <Filter Include="GameEngine\GameObjects\Camera">
       <UniqueIdentifier>{4a70e678-d95c-4782-8c02-96a8ffe3d186}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GameObjects\PhysicsCube">
+      <UniqueIdentifier>{b81b2ba1-7d98-44d4-b346-68431d23b68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\AGameObject">
+      <UniqueIdentifier>{b3575f5c-965e-48e1-9601-0941bd080985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\PhysicsPlane">
+      <UniqueIdentifier>{4b278418-ac80-4f24-831b-edf929e96e14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -172,7 +178,7 @@
       <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="AGameObject.cpp">
-      <Filter>GameEngine\GraphicsEngine\AGameObject</Filter>
+      <Filter>GameEngine\GameObjects\AGameObject</Filter>
     </ClCompile>
     <ClCompile Include="Cube.cpp">
       <Filter>GameEngine\GameObjects\Cube</Filter>
@@ -273,6 +279,12 @@
     <ClCompile Include="PhysicsComponent.cpp">
       <Filter>GameEngine\PhysicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsCube.cpp">
+      <Filter>GameEngine\GameObjects\PhysicsCube</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsPlane.cpp">
+      <Filter>GameEngine\GameObjects\PhysicsPlane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -321,7 +333,7 @@
       <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="AGameObject.h">
-      <Filter>GameEngine\GraphicsEngine\AGameObject</Filter>
+      <Filter>GameEngine\GameObjects\AGameObject</Filter>
     </ClInclude>
     <ClInclude Include="Cube.h">
       <Filter>GameEngine\GameObjects\Cube</Filter>
@@ -442,6 +454,12 @@
     </ClInclude>
     <ClInclude Include="PhysicsComponent.h">
       <Filter>GameEngine\PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsCube.h">
+      <Filter>GameEngine\GameObjects\PhysicsCube</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsPlane.h">
+      <Filter>GameEngine\GameObjects\PhysicsPlane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

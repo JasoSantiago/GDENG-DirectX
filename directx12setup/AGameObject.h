@@ -1,5 +1,9 @@
 #pragma once
 #include <string>
+#include <vector>
+#include <reactphysics3d/mathematics/Quaternion.h>
+
+#include "AComponentSystem.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
@@ -10,6 +14,12 @@ class PixelShader;
 class AGameObject
 {
 public:
+	struct Quaternion {
+		float m_w = 0.0f;
+		float m_x = 0.0f;
+		float m_y = 0.0f;
+		float m_z = 0.0f;
+	};
 	AGameObject(std::string name);
 	~AGameObject();
 
@@ -34,6 +44,9 @@ public:
 
 	float* getPhysicsLocalMatrix();
 	void setLocalMatrix(float matrix[16]);
+
+	void attachComponent(AComponentSystem* component);
+	AComponentSystem* findComponentOfType(AComponentSystem::ComponentType type, std::string name);
 	friend class GameObjectManager;
 
 	_declspec(align(16)) 
@@ -50,6 +63,9 @@ protected:
 	Vector3D localScale;
 	Vector3D localRotation;
 	Matrix4x4 localMatrix;
+	std::vector<AComponentSystem*> componentList;
+	Quaternion quaternion;
+	bool matrixchanged = false;
 
 private:
 	bool enabled = true;

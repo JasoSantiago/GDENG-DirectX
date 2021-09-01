@@ -2,8 +2,12 @@
 #include "SceneCameraHandler.h"
 #include "ShaderLibrary.h"
 
-Plane::Plane(std::string name): AGameObject(name)
+Plane::Plane(std::string name, bool skipinit): AGameObject(name)
 {
+	if(skipinit)
+	{
+		return;
+	}
 	ShaderNames shaderNames;
 	void* shaderByteCode = NULL;
 	size_t sizeShader = 0;

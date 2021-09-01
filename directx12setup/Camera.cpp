@@ -9,7 +9,7 @@ Camera::Camera(std::string name): AGameObject(name)
 	this->forwardDirection = Vector3D(1.0f, 0.0f, 1.0f);
 	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
 
-	this->setPosition(0.0f, 0.0f, -4.0f);
+	this->setPosition(0.0f, 1.0f, -5.0f);
 	this->updateViewMatrix();
 	InputSystem::getInstance()->addListener(this);
 }
@@ -19,7 +19,7 @@ Camera::Camera(float width, float height): AGameObject("Camera")
 	this->forwardDirection = Vector3D(1.0f, 0.0f, 1.0f);
 	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
 
-	this->setPosition(0.0f, 0.0f, -4.0f);
+	this->setPosition(0.0f, 1.0f, -5.0f);
 	this->updateViewMatrix();
 	InputSystem::getInstance()->addListener(this);
 	m_width = width;

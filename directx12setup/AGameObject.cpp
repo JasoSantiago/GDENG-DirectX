@@ -1,5 +1,6 @@
 #include "AGameObject.h"
 
+
 AGameObject::AGameObject(std::string name)
 {
 	this->name = name;
@@ -23,11 +24,13 @@ void AGameObject::draw(int width, int height)
 void AGameObject::setPosition(float x, float y, float z)
 {
 	this->localPosition = Vector3D(x, y, z);
+	this->matrixchanged = false;
 }
 
 void AGameObject::setPosition(Vector3D position)
 {
 	this->localPosition = Vector3D(position);
+	this->matrixchanged = false;
 }
 
 Vector3D AGameObject::getLocalPosition()
@@ -38,11 +41,13 @@ Vector3D AGameObject::getLocalPosition()
 void AGameObject::setScale(float x, float y, float z)
 {
 	this->localScale = Vector3D(x, y, z);
+	this->matrixchanged = false;
 }
 
 void AGameObject::setScale(Vector3D scale)
 {
 	this->localScale = Vector3D(scale);
+	this->matrixchanged = false;
 }
 
 Vector3D AGameObject::getLocalScale()
@@ -50,14 +55,16 @@ Vector3D AGameObject::getLocalScale()
 	return this->localScale;
 }
 
-void AGameObject::setRotation(float x, float y, float z)
+void AGameObject::setRotation(float m_x, float m_y, float m_z)
 {
-	this->localRotation = Vector3D(x, y, z);
+	this->localRotation = Vector3D(m_x, m_y, m_z);
+	this->matrixchanged = false;
 }
 
 void AGameObject::setRotation(Vector3D rot)
 {
 	this->localRotation = Vector3D(rot);
+	this->matrixchanged = false;
 }
 
 Vector3D AGameObject::getRotation()
@@ -115,12 +122,13 @@ void AGameObject::setLocalMatrix(float matrix[16])
 	matrix4x4[3][2] = matrix[14];
 	matrix4x4[3][3] = matrix[15];
 
-	Matrix4x4 newMatrix; newMatrix.setMatrix(matrix4x4);
-	Matrix4x4 scaleMatrix; scaleMatrix.setScale(this->localScale);
-	Matrix4x4 transMatrix; transMatrix.setTranslation(this->localPosition);
+	Matrix4x4 newMatrix; newMatrix.setIdentity(); newMatrix.setMatrix(matrix4x4);
+	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(this->localScale);
+	Matrix4x4 transMatrix; transMatrix.setIdentity(); transMatrix.setTranslation(this->localPosition);
 	transMatrix *= newMatrix;
 	scaleMatrix *= transMatrix;
 	this->localMatrix = scaleMatrix;
+	this->matrixchanged = true;
 }
 
 bool AGameObject::isEnabled()
@@ -131,4 +139,21 @@ bool AGameObject::isEnabled()
 void AGameObject::setEnabled(bool flag)
 {
 	this->enabled = flag;
+}
+
+void AGameObject::attachComponent(AComponentSystem* component)
+{
+	this->componentList.push_back(component);
+	component->attachOwner(this);
+}
+
+AComponentSystem* AGameObject::findComponentOfType(AComponentSystem::ComponentType type, std::string name)
+{
+	for (int i = 0; i < this->componentList.size(); i++) {
+		if (this->componentList[i]->getName() == name && this->componentList[i]->getType() == type) {
+			return this->componentList[i];
+		}
+	}
+
+	return nullptr;
 }

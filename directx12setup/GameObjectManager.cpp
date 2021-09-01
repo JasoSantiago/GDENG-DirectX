@@ -4,6 +4,8 @@
 #include "Cube.h"
 #include "Plane.h"
 #include "AGameObject.h"
+#include "PhysicsCube.h"
+#include "PhysicsPlane.h"
 #include "TexturedCube.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = NULL;
@@ -68,13 +70,13 @@ void GameObjectManager::addObject(AGameObject* gameObject)
 	//used to generate the name of the objects so that they don't overlap
 	if (this->gameObjectMap[gameObject->getName()] != nullptr) {
 		int number = 1;
-		String revisedString = gameObject->getName() + std::to_string(number);
-		while (this->gameObjectMap[revisedString] != nullptr) {
+		std::string newName = gameObject->getName() + std::to_string(number);
+		while (this->gameObjectMap[newName] != nullptr) {
 			number++;
-			revisedString = gameObject->getName() + std::to_string(number);
+			newName = gameObject->getName() + std::to_string(number);
 		}
-		gameObject->name = revisedString;
-		this->gameObjectMap[revisedString] = gameObject;
+		gameObject->name = newName;
+		this->gameObjectMap[newName] = gameObject;
 	}
 	else {
 		this->gameObjectMap[gameObject->getName()] = gameObject;
@@ -92,7 +94,7 @@ void GameObjectManager::createObject(PrimitiveType type)
 	}
 
 	if (type == PrimitiveType::PLANE) {
-		Plane* plane = new Plane("Plane");
+		Plane* plane = new Plane("Plane", false);
 		plane->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(plane);
 	}
@@ -102,6 +104,18 @@ void GameObjectManager::createObject(PrimitiveType type)
 		TCube->setPosition(0.0f, 0.0f, 0.0f);
 		TCube->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(TCube);
+	}
+	if(type == PrimitiveType::PHYSICSCUBE)
+	{
+		for (int i = 0; i < 20; i++) {
+			PhysicsCube* pCUbe = new PhysicsCube("pCube", false);
+			this->addObject(pCUbe);
+		}
+	}
+	if(type == PrimitiveType::PHYSICSPLANE)
+	{
+		PhysicsPlane* pPlane = new PhysicsPlane("pPlane", true);
+		this->addObject(pPlane);
 	}
 }
 

@@ -263,3 +263,14 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+*.pdb
+*.pdb
+x64/Debug/directx12setup.pdb
+directx12setup/x64/Debug/vc142.pdb
+directx12setup/x64/Debug/vc142.idb
+directx12setup/x64/Debug/directx12setup.tlog/link.write.1.tlog
+directx12setup/x64/Debug/directx12setup.tlog/link.read.1.tlog
+directx12setup/x64/Debug/directx12setup.tlog/link.command.1.tlog
+directx12setup/x64/Debug/directx12setup.tlog/CL.write.1.tlog
+directx12setup/x64/Debug/directx12setup.tlog/CL.read.1.tlog
+directx12setup/x64/Debug/directx12setup.tlog/CL.command.1.tlog

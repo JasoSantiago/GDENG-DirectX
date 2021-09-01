@@ -15,7 +15,9 @@ public:
 	enum PrimitiveType {
 		CUBE,
 		PLANE,
-		TEXTUREDCUBE
+		TEXTUREDCUBE,
+		PHYSICSCUBE,
+		PHYSICSPLANE
 	};
 
 	static GameObjectManager* getInstance();
@@ -38,6 +40,8 @@ public:
 private:
 	GameObjectManager();
 	~GameObjectManager();
+	GameObjectManager(GameObjectManager const&) {};
+	GameObjectManager& operator=(GameObjectManager const&) {};
 	static GameObjectManager* sharedInstance;
 
 	HashTable gameObjectMap;

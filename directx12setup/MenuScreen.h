@@ -13,6 +13,8 @@ private:
 	void onCreateCreditsClicked();
 	void onCreateColorPicker();
 	void onCreateTexturedCubeClicked();
+	void onCreatePhysicsCubeClicked();
+	void onCreatePhysicsPlaneClicked();
 	friend class UIManager;
 
 	bool isOpen = false;

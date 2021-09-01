@@ -14,8 +14,6 @@ Cube::Cube(std::string name, bool skipinit): AGameObject(name)
 	void* shaderByteCode = NULL;
 	size_t sizeShader = 0;
 	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
-
-	std::cout << "created Cube";
 	Vertex vertex_list[] =
 	{
 		//X - Y - Z
@@ -83,7 +81,7 @@ void Cube::update(float deltaTime)
 	/*this->deltaTime = deltaTime;
 	this->ticks += deltaTime;
 	float rotSpeed = this->ticks * this->speed;*/
-	this->setRotation(this->rot_x, this->rot_y, 0.0f);
+	//this->setRotation(this->rot_x, this->rot_y, 0.0f);
 }
 
 void Cube::draw(int width, int height)
