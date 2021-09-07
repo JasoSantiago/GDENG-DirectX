@@ -133,6 +133,18 @@
     <Filter Include="GameEngine\GameObjects\PhysicsPlane">
       <UniqueIdentifier>{4b278418-ac80-4f24-831b-edf929e96e14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Backend">
+      <UniqueIdentifier>{fe1d123c-17a4-486f-9992-30cc992d4db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\PlayScreen">
+      <UniqueIdentifier>{ba33e5c5-34d9-414f-a381-f54928746973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Storage">
+      <UniqueIdentifier>{2ae06ec7-7acf-4676-8ed2-f0864e5847be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UI\Redo-Undo Screen">
+      <UniqueIdentifier>{0e3c9f24-dafa-4c87-ae9a-2c5b78333af1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -284,6 +296,21 @@
     </ClCompile>
     <ClCompile Include="PhysicsPlane.cpp">
       <Filter>GameEngine\GameObjects\PhysicsPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineBackEnd.cpp">
+      <Filter>GameEngine\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScreen.cpp">
+      <Filter>GameEngine\UI\PlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage.cpp">
+      <Filter>GameEngine\GraphicsEngine\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="History.cpp">
+      <Filter>GameEngine\GraphicsEngine\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="RedoUndoScreen.cpp">
+      <Filter>GameEngine\UI\Redo-Undo Screen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -460,6 +487,21 @@
     </ClInclude>
     <ClInclude Include="PhysicsPlane.h">
       <Filter>GameEngine\GameObjects\PhysicsPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineBackEnd.h">
+      <Filter>GameEngine\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScreen.h">
+      <Filter>GameEngine\UI\PlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.h">
+      <Filter>GameEngine\GraphicsEngine\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="History.h">
+      <Filter>GameEngine\GraphicsEngine\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="RedoUndoScreen.h">
+      <Filter>GameEngine\UI\Redo-Undo Screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

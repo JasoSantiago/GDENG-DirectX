@@ -38,7 +38,7 @@ AGameObject* GameObjectManager::findObjectByName(std::string name)
 	}
 }
 
-GameObjectManager::List GameObjectManager::getAllObjects()
+std::vector<AGameObject*>  GameObjectManager::getAllObjects()
 {
 	return this->gameObjectList;
 }
@@ -160,6 +160,40 @@ void GameObjectManager::setSelectedObject(std::string name)
 void GameObjectManager::setSelectedObject(AGameObject* gameObject)
 {
 	this->selectedObject = gameObject;
+}
+
+void GameObjectManager::saveStates()
+{
+	for(int i = 0; i < gameObjectList.size(); i++)
+	{
+		if (this->gameObjectList[i]->stored == false) {
+			this->gameObjectList[i]->stored = true;
+			this->gameObjectList[i]->matrixchanged = true;
+			this->gameObjectList[i]->saveState();
+		}
+	}
+}
+
+void GameObjectManager::restoreStates()
+{
+	for (int i = 0; i < gameObjectList.size(); i++)
+	{
+		this->gameObjectList[i]->restoreState();
+		this->gameObjectList[i]->stored = false;
+	}
+}
+
+void GameObjectManager::applyStorageValues(Storage* storage)
+{
+	AGameObject* objectChange = this->findObjectByName(storage->getOwnerName());
+	if(objectChange != nullptr)
+	{
+		objectChange->setPosition(storage->getStoredPos());
+		objectChange->setScale(storage->gettStoredScale());
+		objectChange->setRotation(storage->getStoredRotation());
+		objectChange->setLocalMatrix(storage->getStoredMatrix().getMatrix());
+		
+	}
 }
 
 AGameObject* GameObjectManager::getSelectedObject()

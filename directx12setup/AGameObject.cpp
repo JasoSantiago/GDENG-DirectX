@@ -147,6 +147,20 @@ void AGameObject::attachComponent(AComponentSystem* component)
 	component->attachOwner(this);
 }
 
+void AGameObject::detachComponent(AComponentSystem* component)
+{
+	int index = -1;
+	for (int i = 0; i < this->componentList.size(); i++) {
+		if (this->componentList[i] == component) {
+			index = i;
+			break;
+		}
+	}
+	if (index != -1) {
+		this->componentList.erase(this->componentList.begin() + index);
+	}
+}
+
 AComponentSystem* AGameObject::findComponentOfType(AComponentSystem::ComponentType type, std::string name)
 {
 	for (int i = 0; i < this->componentList.size(); i++) {
@@ -156,4 +170,26 @@ AComponentSystem* AGameObject::findComponentOfType(AComponentSystem::ComponentTy
 	}
 
 	return nullptr;
+}
+
+Matrix4x4 AGameObject::getMatrix()
+{
+	return this->localMatrix;
+}
+
+void AGameObject::saveState()
+{
+	this->storedPosition = this->localPosition;
+	this->storedRotation = this->localRotation;
+	this->storedScale = this->localScale;
+	this->storedMatrix.setIdentity();
+	this->storedMatrix = this->localMatrix;
+}
+
+void AGameObject::restoreState()
+{
+	this->localPosition = this->storedPosition;
+	this->localRotation = this->storedRotation;
+	this->localScale = this->storedScale;
+	this->localMatrix = this->storedMatrix;
 }

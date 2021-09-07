@@ -39,7 +39,6 @@ void PhysicsComponent::perform(float delta_time)
 	const Transform transform = this->rigidBody->getTransform();
 	float matrix[16];
 	transform.getOpenGLMatrix(matrix);
-
 	this->getOwner()->setLocalMatrix(matrix);
 }
 

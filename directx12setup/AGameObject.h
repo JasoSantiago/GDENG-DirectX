@@ -46,7 +46,10 @@ public:
 	void setLocalMatrix(float matrix[16]);
 
 	void attachComponent(AComponentSystem* component);
+	void detachComponent(AComponentSystem* component);
 	AComponentSystem* findComponentOfType(AComponentSystem::ComponentType type, std::string name);
+
+	Matrix4x4 getMatrix();
 	friend class GameObjectManager;
 
 	_declspec(align(16)) 
@@ -57,17 +60,24 @@ public:
 		unsigned int m_time;
 	};
 
+	virtual void saveState();
+	virtual void restoreState();
+
 protected:
 	std::string name;
 	Vector3D localPosition;
 	Vector3D localScale;
 	Vector3D localRotation;
 	Matrix4x4 localMatrix;
+	Vector3D storedPosition;
+	Vector3D storedScale;
+	Vector3D storedRotation;
+	Matrix4x4 storedMatrix;
 	std::vector<AComponentSystem*> componentList;
 	Quaternion quaternion;
 	bool matrixchanged = false;
 
 private:
 	bool enabled = true;
-
+	bool stored = false;
 };

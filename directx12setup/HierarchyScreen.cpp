@@ -23,7 +23,7 @@ void HierarchyScreen::drawUI()
 
 void HierarchyScreen::updateObjectList() const
 {
-	GameObjectManager::List objectList = GameObjectManager::getInstance()->getAllObjects();
+	std::vector<AGameObject*> objectList = GameObjectManager::getInstance()->getAllObjects();
 	for (int i = 0; i < objectList.size(); i++) {
 		std::string objectName = objectList[i]->getName();
 		if (ImGui::Button(objectName.c_str(), ImVec2(235, 0))) {

@@ -274,3 +274,4 @@ directx12setup/x64/Debug/directx12setup.tlog/link.command.1.tlog
 directx12setup/x64/Debug/directx12setup.tlog/CL.write.1.tlog
 directx12setup/x64/Debug/directx12setup.tlog/CL.read.1.tlog
 directx12setup/x64/Debug/directx12setup.tlog/CL.command.1.tlog
+*.pdb

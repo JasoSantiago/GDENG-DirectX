@@ -17,6 +17,8 @@ public:
 	const std::string HIERARCHY_SCREEN = "HIERARCHY_SCREEN";
 	const std::string CREDITS_SCREEN = "CREDITS_SCREEN";
 	const std::string COLOR_PICKER = "COLOR_PICKER";
+	const std::string PLAY_SCREEN = "PLAY_SCREEN";
+	const std::string REDO_UNDO_SCREEN = "REDO_UNDO_SCREEN";
 };
 
 

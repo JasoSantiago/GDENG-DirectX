@@ -18,6 +18,8 @@
 #include "imGUI/imgui_impl_win32.h"
 #include "TextureManager.h"
 #include "Texture.h"
+#include "EngineBackEnd.h"
+#include "History.h"
 
 
 AppWindow::AppWindow()
@@ -46,6 +48,8 @@ void AppWindow::onCreate()
 	ShaderLibrary::initialize();
 	MeshManager::initialize();
 	BaseComponentSystem::initialize();
+	EngineBackEnd::initialize();
+	History::initialize();
 	m_swap_chain = GraphicsEngine::get()->createSwapChain();
 
 	RECT rc = this->getClientWindowRect();
@@ -97,8 +101,22 @@ void AppWindow::onUpdate()
 
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
-	GameObjectManager::getInstance()->updateAllObjects();
-	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+	if (EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::PLAY) {
+		GameObjectManager::getInstance()->updateAllObjects();
+		BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+	}
+	else if (EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::EDITOR) {
+		GameObjectManager::getInstance()->updateAllObjects();
+	}
+	else if(EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::PAUSED)
+	{
+		if(EngineBackEnd::getInstance()->insideFrameStep())
+		{
+			GameObjectManager::getInstance()->updateAllObjects();
+			BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+			EngineBackEnd::getInstance()->endFrameStep();
+		}
+	}
 	GameObjectManager::getInstance()->renderAllObjects(m_width, m_height);
 	UIManager::getInstance()->drawAllUI();
 

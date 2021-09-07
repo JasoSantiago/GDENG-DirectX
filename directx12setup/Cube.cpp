@@ -161,3 +161,8 @@ void Cube::rotateCubey(float value, float deltaTime)
 {
 	this->rot_y += value * deltaTime;
 }
+
+void Cube::restoreState()
+{
+	AGameObject::restoreState();
+}

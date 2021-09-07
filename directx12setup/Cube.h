@@ -19,6 +19,7 @@ public:
 	void setAnimSpeed(float speed);
 	void rotateCubex(float value, float deltaTime); 
 	void rotateCubey(float value, float deltaTime);
+	void restoreState() override;
 	
 protected:
 	VertexBuffer* vertex_buffer;

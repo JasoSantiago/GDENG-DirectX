@@ -29,10 +29,7 @@ PhysicsCube::PhysicsCube(std::string name, bool skipinit): Cube(name, skipinit)
 	allMatrix *= translationMatrix;
 	//allMatrix.printMatrix();
 	this->localMatrix = allMatrix;
-	this->attachComponent(new PhysicsComponent("PhysicsComponent", this));
-
-	PhysicsComponent* component = (PhysicsComponent*)this->findComponentOfType(AComponentSystem::ComponentType::Physics, "PhysicsComponent");
-	component->getRigidBody()->setMass(this->mass);
+	this->attachPhysicsComponent();
 }
 
 PhysicsCube::~PhysicsCube()
@@ -93,4 +90,21 @@ void PhysicsCube::draw(int width, int height)
 void PhysicsCube::update(float delta_time)
 {
 	
+}
+
+void PhysicsCube::restoreState()
+{
+	Cube::restoreState();
+	this->detachComponent(this->component);
+	this->attachPhysicsComponent();
+	
+}
+
+void PhysicsCube::attachPhysicsComponent()
+{
+	this->component = new PhysicsComponent("PhysicsComponent", this);
+	this->attachComponent(this->component);
+
+	this->component = (PhysicsComponent*)this->findComponentOfType(AComponentSystem::ComponentType::Physics, "PhysicsComponent");
+	this->component->getRigidBody()->setMass(this->mass);
 }

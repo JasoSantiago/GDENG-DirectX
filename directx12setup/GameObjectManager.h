@@ -4,13 +4,11 @@
 #include <string>
 #include <unordered_map>
 #include "AGameObject.h"
+#include "Storage.h"
 
 class GameObjectManager
 {
 public:
-	typedef std::string String;
-	typedef std::vector<AGameObject*> List;
-	typedef std::unordered_map<String, AGameObject*> HashTable;
 
 	enum PrimitiveType {
 		CUBE,
@@ -25,7 +23,7 @@ public:
 	static void destroy();
 
 	AGameObject* findObjectByName(std::string name);
-	List getAllObjects();
+	std::vector<AGameObject*>  getAllObjects();
 	int activeObjects();
 	void updateAllObjects();
 	void renderAllObjects(int width, int height);
@@ -35,6 +33,9 @@ public:
 	void deleteObjectByName(std::string name);
 	void setSelectedObject(std::string name);
 	void setSelectedObject(AGameObject* gameObject);
+	void saveStates();
+	void restoreStates();
+	void applyStorageValues( Storage* storage);
 	AGameObject* getSelectedObject();
 
 private:
@@ -44,8 +45,8 @@ private:
 	GameObjectManager& operator=(GameObjectManager const&) {};
 	static GameObjectManager* sharedInstance;
 
-	HashTable gameObjectMap;
-	List gameObjectList;
+	std::unordered_map<std::string, AGameObject*> gameObjectMap;
+	std::vector<AGameObject*> gameObjectList;
 
 	AGameObject* selectedObject = NULL;
 };

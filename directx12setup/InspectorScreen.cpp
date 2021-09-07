@@ -3,6 +3,7 @@
 #include "GameObjectManager.h"
 #include "UIManager.h"
 #include "AGameObject.h"
+#include "History.h"
 
 InspectorScreen::InspectorScreen() : AUIScreen("InspectorScreen")
 {
@@ -55,6 +56,7 @@ void InspectorScreen::updateTransformDisplays()
 void InspectorScreen::onTransformUpdate()
 {
 	if (this->selectedObject != NULL) {
+		History::getInstance()->recordHistory(this->selectedObject);
 		this->selectedObject->setPosition(Vector3D(this->Displayposition[0], this->Displayposition[1], this->Displayposition[2]));
 		this->selectedObject->setRotation(Vector3D(this->Displayrotation[0], this->Displayrotation[1], this->Displayrotation[2]));
 		this->selectedObject->setScale(Vector3D(this->Displayscale[0], this->Displayscale[1], this->Displayscale[2]));

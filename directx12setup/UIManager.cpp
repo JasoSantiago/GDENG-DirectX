@@ -7,6 +7,8 @@
 #include "DeviceContext.h"
 #include "CreditsScreen.h"
 #include "ColorPicker.h"
+#include "PlayScreen.h"
+#include "RedoUndoScreen.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -82,6 +84,14 @@ UIManager::UIManager(HWND windowHandle)
 	HierarchyScreen* hierarchyScreen = new HierarchyScreen();
 	this->uiTable[uiNames.HIERARCHY_SCREEN] = hierarchyScreen;
 	this->uiList.push_back(hierarchyScreen);
+
+	PlayScreen* playScreen = new PlayScreen();
+	this->uiTable[uiNames.PLAY_SCREEN] = playScreen;
+	this->uiList.push_back(playScreen);
+
+	RedoUndoScreen* ruScreen = new RedoUndoScreen();
+	this->uiTable[uiNames.REDO_UNDO_SCREEN] = ruScreen;
+	this->uiList.push_back(ruScreen);
 }
 
 UIManager::~UIManager()
