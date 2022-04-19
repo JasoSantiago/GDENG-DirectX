@@ -16,6 +16,7 @@ private:
 	BaseComponentSystem(BaseComponentSystem const&) {};
 	BaseComponentSystem& operator=(BaseComponentSystem const&) {};
 	static BaseComponentSystem* sharedInstance;
+
 	PhysicsSystem* physicsSystem;
 };
 

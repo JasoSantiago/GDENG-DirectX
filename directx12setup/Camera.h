@@ -2,40 +2,39 @@
 #include "AGameObject.h"
 #include "InputListener.h"
 
-class Camera: public AGameObject, public InputListener
+class Camera : public AGameObject, public InputListener
 {
 public:
 	Camera(std::string name);
-	Camera(float width, float height);
 	~Camera();
 
-	void update(float deltaTime) override;
-	void setDimensions(float width, float height);
+	virtual void update(float deltaTime) override;
 	Matrix4x4 getViewMatrix();
-	Matrix4x4 getProjMatrix();
-	virtual void draw(int width, int height) override;
+
+	virtual void draw(ConstantBuffer* cb) override;
+
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
+
 	virtual void onMouseMove(const Point& delta_mouse_pos) override;
-	virtual void onLeftMouseDown(const Point& mousepos) override;
-	virtual void onLeftMouseUp(const Point& mousepos) override;
-	virtual void onRightMouseDown(const Point& mousepos) override;
-	virtual void onRightMouseUp(const Point& mousepos) override;
+
+	virtual void onLeftMouseDown(const Point& mouse_pos) override;
+	virtual void onLeftMouseUp(const Point& mouse_pos) override;
+	virtual void onRightMouseDown(const Point& mouse_pos) override;
+	virtual void onRightMouseUp(const Point& mouse_pos) override;
+
+	Vector3D getForwardVector();
 
 private:
-	void updateViewMatrix();
+	virtual void updateVertexLocations() override;
+
+	float moveForward = 0.0f;
+	float moveRight = 0.0f;
+	float moveUp = 0.0f;
+	Matrix4x4 viewMatrix;
 	
-	float ticks = 0.0f;
-	bool mouseDown = false;
-	float deltaTime = 0.0f;
-	bool m_perspective_toggle = true;
-	float m_width;
-	float m_height;
-	float m_near_plane = 0.1f;
-	float fov = 1.57f;
-	float forward = 0.0f;
-	float rightward = 0.0f;
-	Vector3D forwardDirection;
-	Vector3D backwardDirection;
+	float m_deltaTime = 0;
+
+	bool adjustingCam = false;
 };
 

@@ -1,43 +1,38 @@
 #pragma once
-#include <iostream>
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "AGameObject.h"
-#include "Storage.h"
 
+class AGameObject;
+class ConstantBuffer;
 class GameObjectManager
 {
 public:
-
-	enum PrimitiveType {
-		CUBE,
-		PLANE,
-		TEXTUREDCUBE,
-		PHYSICSCUBE,
-		PHYSICSPLANE
-	};
-
 	static GameObjectManager* getInstance();
 	static void initialize();
 	static void destroy();
 
-	AGameObject* findObjectByName(std::string name);
-	std::vector<AGameObject*>  getAllObjects();
-	int activeObjects();
-	void updateAllObjects();
-	void renderAllObjects(int width, int height);
-	void addObject(AGameObject* gameObject);
-	void createObject(PrimitiveType type);
-	void deleteObject(AGameObject* gameObject);
-	void deleteObjectByName(std::string name);
-	void setSelectedObject(std::string name);
-	void setSelectedObject(AGameObject* gameObject);
-	void saveStates();
-	void restoreStates();
-	void applyStorageValues( Storage* storage);
+	void addGameObject(AGameObject* gameObject);
+
+	void updateAllGameObjects(float deltaTime);
+	void drawAllGameObjects(ConstantBuffer* cb);
+
+	std::vector<std::string> getGameObjectNames();
+	std::vector<AGameObject*> getAllObjects();
+
+	void selectObject(int index);
+	void selectObject(AGameObject* gameObject);
+
+	void deleteObject(std::string objectName);
+
 	AGameObject* getSelectedObject();
 
+	AGameObject* findObjectByName(std::string name);
+
+	void applyEditorAction(class EditorAction* action, bool isUndo);
+	void saveStates();
+	void restoreStates();
+  
 private:
 	GameObjectManager();
 	~GameObjectManager();
@@ -45,8 +40,13 @@ private:
 	GameObjectManager& operator=(GameObjectManager const&) {};
 	static GameObjectManager* sharedInstance;
 
-	std::unordered_map<std::string, AGameObject*> gameObjectMap;
-	std::vector<AGameObject*> gameObjectList;
+	void init();
+	void release();
 
-	AGameObject* selectedObject = NULL;
+	std::vector<AGameObject*> gameObjectList;
+	std::vector<std::string> gameObjectNames;
+	std::unordered_map<std::string, AGameObject*> gameObjectMap;
+
+	AGameObject* selectedObject = nullptr;
 };
+

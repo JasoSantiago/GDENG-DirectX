@@ -1,0 +1,36 @@
+Type: 4
+Capsule
+Position: 0 0 0
+Rotation: 0 0 0
+Scale: 1 1 1
+0
+Type: 1
+Cube (3)
+Position: -2.5 0 0
+Rotation: 0 1.234134 0
+Scale: 5 5 0.3
+0
+Type: 1
+Cube (2)
+Position: 2.5 0 0
+Rotation: 0 1.234134 0
+Scale: 5 5 0.3
+0
+Type: 1
+Cube (1)
+Position: 0 0 2.5
+Rotation: 0 0 0
+Scale: 5 5 0.3
+0
+Type: 1
+Cube
+Position: 0 0 -2.5
+Rotation: 0 0 0
+Scale: 5 5 -0.3
+0
+Type: 2
+Plane
+Position: 0 -2 0
+Rotation: 0 0 0
+Scale: 15 1 15
+0

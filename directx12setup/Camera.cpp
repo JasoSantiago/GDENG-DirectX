@@ -1,203 +1,131 @@
 #include "Camera.h"
-
-#include "EngineTIme.h"
 #include "InputSystem.h"
 
-
-Camera::Camera(std::string name): AGameObject(name)
+Camera::Camera(std::string name) : AGameObject(name, AGameObject::PrimitiveType::CAMERA)
 {
-	this->forwardDirection = Vector3D(1.0f, 0.0f, 1.0f);
-	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
-
-	this->setPosition(0.0f, 1.0f, -5.0f);
-	this->updateViewMatrix();
 	InputSystem::getInstance()->addListener(this);
-}
-
-Camera::Camera(float width, float height): AGameObject("Camera")
-{
-	this->forwardDirection = Vector3D(1.0f, 0.0f, 1.0f);
-	this->backwardDirection = Vector3D(-1.0f, 0.0f, -1.0f);
-
-	this->setPosition(0.0f, 1.0f, -5.0f);
-	this->updateViewMatrix();
-	InputSystem::getInstance()->addListener(this);
-	m_width = width;
-	m_height = height;
-	
+	viewMatrix.setIdentity();
 }
 
 Camera::~Camera()
 {
-	InputSystem::getInstance()->removeListener(this);
 }
 
 void Camera::update(float deltaTime)
 {
-	this->deltaTime = deltaTime;
+	m_deltaTime = deltaTime;
 
-	Matrix4x4 temp(this->localMatrix);
-	temp.inverse();
+	Vector3D newPos = this->localPosition + viewMatrix.getZDirection() * moveForward * 2.0f * deltaTime + 
+		viewMatrix.getXDirection() * moveRight * 2.0f * deltaTime + viewMatrix.getYDirection() * moveUp * 2.0f * deltaTime;
 
-	Vector3D new_pos = temp.getZDirection() * (forward * 0.1f);
-	new_pos += (temp.getXDirection() * (rightward * 0.1f));
-
-	setPosition(localPosition + new_pos);
-	
-	this->updateViewMatrix();
-}
-
-void Camera::setDimensions(float width, float height)
-{
-	m_width = width;
-	m_height = height;
+	this->setPosition(newPos);
 }
 
 Matrix4x4 Camera::getViewMatrix()
 {
-	return this->localMatrix;
+	Matrix4x4 worldCam;
+	worldCam.setIdentity();
+	
+	Matrix4x4 temp;
+
+	temp.setIdentity();
+	temp.setRotationX(this->localRotation.x);
+	worldCam *= temp;
+
+	temp.setIdentity();
+	temp.setRotationY(this->localRotation.y);
+	worldCam *= temp;
+
+	temp.setTranslation(this->localPosition);
+	worldCam *= temp;
+
+	viewMatrix = worldCam;
+	//worldCam.invert();
+
+	return worldCam;
 }
 
-Matrix4x4 Camera::getProjMatrix()
+void Camera::draw(ConstantBuffer* cb)
 {
-	Matrix4x4 tempMatrix;
-	float aspectRatio =m_width / m_height;
-	if (m_perspective_toggle) {
-		tempMatrix.setPerspectiveFovLH(fov - (m_near_plane * 0.5f), aspectRatio, m_near_plane, 1000.0f);
-		return tempMatrix;
-	}
-	else
-	{
-		tempMatrix.setOrthoLH(aspectRatio, aspectRatio, -4.0f, 4.0f);
-		return tempMatrix;
-	}
 }
 
-void Camera::draw(int width, int height)
+void Camera::updateVertexLocations()
 {
 }
 
 void Camera::onKeyDown(int key)
 {
-	Vector3D localPos = this->getLocalPosition();
-	float x = localPos.m_x;
-	float y = localPos.m_y;
-	float z = localPos.m_z;
-	float moveSpeed = 10.0f;
-	if (key == 'W')
-	{
-		forward = 1.0f;
-	}
-	else if (key == 'S')
-	{
-		forward = -1.0f;
-	}
-	else if (key == 'A')
-	{
-		rightward = -1.0f;
-
-	}
-	else if (key == 'D')
-	{
-		rightward = 1.0f;
-	}
-	else if(key == 'Z')
-	{
-		m_near_plane += EngineTime::getDeltaTime() * 1.0f;
-		if(m_near_plane > 100.0f)
+	if (adjustingCam) {
+		if (key == 'W')
 		{
-			m_near_plane = 100.0f;
+			moveForward = 1.0f;
 		}
-	}
-	else if(key == 'X')
-	{
-		m_near_plane -= EngineTime::getDeltaTime() * 1.0f;
-		if(m_near_plane < 0.1f)
+		else if (key == 'S')
 		{
-			m_near_plane = 0.1f;
+			moveForward = -1.0f;
+		}
+		if (key == 'A')
+		{
+			moveRight = -1.0f;
+		}
+		else if (key == 'D')
+		{
+			moveRight = 1.0f;
+		}
+		if (key == 'Q')
+		{
+			moveUp = -1.0f;
+		}
+		else if (key == 'E')
+		{
+			moveUp = 1.0f;
 		}
 	}
 }
 
 void Camera::onKeyUp(int key)
 {
-	if (key == 'W')
+	if (key == 'W' || key == 'S')
 	{
-		forward = 0.0f;
-
+		moveForward = 0;
 	}
-	else if (key == 'S')
+	if (key == 'A' || key == 'D')
 	{
-		forward = 0.0f;
+		moveRight = 0;
 	}
-	else if (key == 'A')
+	if (key == 'Q' || key == 'E')
 	{
-		rightward = 0.0f;
-
-	}
-	else if (key == 'D')
-	{
-		rightward = 0.0f;
-
-	}
-	if(key == 'T')
-	{
-		m_perspective_toggle = !m_perspective_toggle;
+		moveUp = 0;
 	}
 }
 
 void Camera::onMouseMove(const Point& delta_mouse_pos)
 {
-
-	if (this->mouseDown) {
-		Vector3D localRot = this->getRotation();
-		float x = localRot.m_x;
-		float y = localRot.m_y;
-		float z = localRot.m_z;
-
-		float speed = 0.005f;
-		x += delta_mouse_pos.m_y * speed;
-		y += delta_mouse_pos.m_x * speed;
-
-		this->setRotation(x, y, z);
-		this->updateViewMatrix();
+	if (adjustingCam) {
+		this->setRotation(Vector3D(this->localRotation.x + delta_mouse_pos.y * m_deltaTime * 0.25f,
+			this->localRotation.y + delta_mouse_pos.x * m_deltaTime * 0.25f, this->localRotation.z));
 	}
 }
 
-void Camera::onLeftMouseDown(const Point& mousepos)
+void Camera::onLeftMouseDown(const Point& mouse_pos)
 {
 }
 
-void Camera::onLeftMouseUp(const Point& mousepos)
+void Camera::onLeftMouseUp(const Point& mouse_pos)
 {
 }
 
-void Camera::onRightMouseDown(const Point& mousepos)
+void Camera::onRightMouseDown(const Point& mouse_pos)
 {
-	this->mouseDown = true;
+	adjustingCam = true;
 }
 
-void Camera::onRightMouseUp(const Point& mousepos)
+void Camera::onRightMouseUp(const Point& mouse_pos)
 {
-	this->mouseDown = false;
+	adjustingCam = false;
 }
 
-void Camera::updateViewMatrix()
+Vector3D Camera::getForwardVector()
 {
-	Matrix4x4 worldCam; worldCam.setIdentity();
-	Matrix4x4 temp; temp.setIdentity();
-
-	Vector3D localRot = this->getRotation();
-
-	temp.setRotationX(localRot.m_x);
-	worldCam *= temp;
-
-	temp.setRotationY(localRot.m_y);
-	worldCam *= temp;
-
-	temp.setTranslation(this->getLocalPosition());
-	worldCam *= temp;
-
-	worldCam.inverse();
-	this->localMatrix = worldCam;
+	return viewMatrix.getZDirection();
 }

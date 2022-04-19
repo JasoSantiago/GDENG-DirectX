@@ -1,49 +1,27 @@
 #include "TextureManager.h"
 #include "Texture.h"
 
-TextureManager* TextureManager::sharedInstance = NULL;
-
-void TextureManager::initialize()
+TextureManager::TextureManager() : ResourceManager()
 {
-    sharedInstance = new TextureManager();
-}
-
-void TextureManager::destroy()
-{
-    delete sharedInstance;
-}
-
-TextureManager* TextureManager::getInstance()
-{
-	return sharedInstance;
-}
-
-Texture* TextureManager::createTextureFromFile(const wchar_t* filePath)
-{
-	std::wstring fullPath = filePath;
-
-	this->resourceMap[fullPath] = this->convertToResource(filePath);
-
-	return (Texture*)this->resourceMap[fullPath];
-}
-
-TextureManager::TextureManager():ResourceManager()
-{
-
 }
 
 TextureManager::~TextureManager()
 {
 }
 
-Resource* TextureManager::convertToResource(const wchar_t* filePath)
+Texture* TextureManager::createTextureFromFile(const wchar_t* file_path)
 {
-	Texture* m_tex = nullptr;
-	try
-	{
-		m_tex = new Texture(filePath);
-	}
-	catch (...) {}
+    return (Texture*)(createResourceFromFile(file_path));
+}
 
-	return m_tex;
+Resource* TextureManager::createResourceFromFileConcrete(const wchar_t* file_path)
+{
+    Texture* tex = nullptr;
+    try
+    {
+        tex = new Texture(file_path);
+    }
+    catch (...) {}
+
+    return tex;
 }

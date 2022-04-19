@@ -1,93 +1,180 @@
 #include "AppWindow.h"
 #include <Windows.h>
-
-#include "BaseComponentSystem.h"
-#include "GameObjectManager.h"
-#include "Vector3D.h"
-#include "Matrix4x4.h"
+#include "GameObjectConstants.h"
 #include "InputSystem.h"
-#include "MeshManager.h"
-#include "PhysicsCube.h"
-#include "PhysicsPlane.h"
-#include "PhysicsSystem.h"
-#include "SceneCameraHandler.h"
-#include "ShaderLibrary.h"
+#include <iostream>
+#include <random>
 #include "UIManager.h"
-#include "imGUI/imgui.h"
-#include "imGUI/imgui_impl_dx11.h"
-#include "imGUI/imgui_impl_win32.h"
-#include "TextureManager.h"
-#include "Texture.h"
-#include "EngineBackEnd.h"
-#include "History.h"
+#include "GameObjectManager.h"
+#include "PhysicsSystem.h"
+#include "BaseComponentSystem.h"
+#include "EngineBackend.h"
 
+AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow::AppWindow()
 {
+	
 }
-
-
 
 AppWindow::~AppWindow()
 {
 }
 
-void AppWindow::onCreate()
+void AppWindow::onLeftMouseDown(const Point& mouse_pos)
 {
-	//rndommizing positions
-	std::random_device rd;
-	std::default_random_engine eng(rd());
-	std::uniform_real_distribution<float> distr(-0.75, 0.75);
-	std::uniform_real_distribution<float> distr2(-3.75, 3.75);
-
-	Window::onCreate();
-
-	InputSystem::initialize();
-	SceneCameraHandler::initialize();
-	GraphicsEngine::get()->init();
-	ShaderLibrary::initialize();
-	MeshManager::initialize();
-	BaseComponentSystem::initialize();
-	EngineBackEnd::initialize();
-	History::initialize();
-	m_swap_chain = GraphicsEngine::get()->createSwapChain();
+	/*POINT point = {mouse_pos.x, mouse_pos.y};
+	ScreenToClient(this->m_hwnd, &point);
 
 	RECT rc = this->getClientWindowRect();
-	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
-	m_width = rc.right - rc.left;
-	m_height = rc.bottom - rc.top;
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+	Vector3D convertedPos = Vector3D((float)point.x / (float)width * 2.0f - 1.0f, -(float)point.y / (float)height * 2.0f + 1.0f, 1.0f);
 
-	SceneCameraHandler::getInstance()->getSceneCamera()->setDimensions(m_width, m_height);
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
+	Matrix4x4 inverseProj(cc.m_proj);
+	inverseProj.invert();
+	Vector3D raycastEye = inverseProj * convertedPos;
+	raycastEye.z = 1.0f;
 
-	GameObjectManager::initialize();
-	TextureManager::initialize();
+	Vector3D raycastWorld;
+	if (isPerspective)
+	{
+		raycastWorld = Quaternion::rotatePointEuler(raycastEye, cam->getLocalRotation());
+		raycastWorld.normalize();//normalize if we want direction vector for perspective raycast
+	}
+	else
+	{
+		raycastWorld = Quaternion::rotatePointEuler(raycastEye, cam->getLocalRotation());
+	}
 
-	//teapot
-	//m_mgb = new MeshGameObject("teapot", L"teapot.obj", L"brick.png");
-	//m_mgb->setPosition(0.0f, 0.0f, 0.0f);
-	//m_mgb->setScale(1.0f, 1.0f, 1.0f);
-	//GameObjectManager::getInstance()->addObject(m_mgb);
+	//find if any object collides with the raycast and get the one that is the closest to the raycast origin
+	float minT = INT_MAX;*/
+	/*int minIndex = -1;
+	float t;
+	//ortho raycast comes from cursor straight forward along z
+	//perspective raycast comes from camera position in the direction of raycast world
+	for (int i = 0; i < cubes.size(); i++)
+	{
+		if (!isPerspective) 
+			t = cubes[i]->checkRaycast(raycastWorld + cam->getLocalPosition() + cam->getForwardVector() * (orthoNearPlane), cam->getForwardVector());
+		else 
+			t = cubes[i]->checkRaycast(cam->getLocalPosition(), raycastWorld);
 
-	//bunny
-	//m_mgb1 = new MeshGameObject("bunny", L"bunny.obj", L"");
-	//m_mgb1->setPosition(1.0f, 0.0f, 0.0f);
-	//m_mgb1->setScale(1.0f, 1.0f, 1.0f);
+		if (t != -9999)
+		{
+			if (t < minT)
+			{
+				minT = t;
+				minIndex = i;
+				//cubes[i]->setColors(Vector3D(0, 0, 1));
+			}
+		}
+	}
 
-	//armadillo
-	//m_mgb2 = new MeshGameObject("armadillo", L"armadillo.obj", L"");
-	//m_mgb2->setPosition(-1.0f, 0.0f, 0.0f);
-	//m_mgb2->setScale(1.0f, 1.0f, 1.0f);
+	if (minIndex != -1)
+	{
+		selectedCube = cubes[minIndex];
+	}*/
+}
+
+void AppWindow::onLeftMouseUp(const Point& mouse_pos)
+{
+	selectedCube = nullptr;
+}
+
+void AppWindow::onRightMouseDown(const Point& mouse_pos)
+{
 	
-	//GameObjectManager::getInstance()->addObject(m_mgb1);
-	//GameObjectManager::getInstance()->addObject(m_mgb2);
-	GraphicsEngine::get()->releaseCompiledShader();
-	m_vb = GraphicsEngine::get()->createVertexBuffer();
-	GraphicsEngine::get()->releaseCompiledShader();
+}
 
+void AppWindow::onRightMouseUp(const Point& mouse_pos)
+{
+	
+}
 
-	UIManager::initialize(this->m_hwnd);
+void AppWindow::onMouseMove(const Point& delta_mouse_pos)
+{
+	/*RECT rc = this->getClientWindowRect();
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+
+	rot_x += (mouse_pos.y - height / 2.0f) * m_delta_time * 0.25f;
+	rot_y += (mouse_pos.x - width / 2.0f) * m_delta_time * 0.25f;
+
+	InputSystem::getInstance()->setCursorPosition(Point(width / 2.0f, height / 2.0f));*/
+	/*if (selectedCube != nullptr)
+	{
+		Vector3D cubePos = selectedCube->getLocalPosition();
+		Matrix4x4 viewMat = cam->getViewMatrix();
+		Vector3D newPos = cubePos + viewMat.getXDirection() * delta_mouse_pos.x * 0.5f * m_delta_time - 
+							viewMat.getYDirection() * delta_mouse_pos.y * 0.5f * m_delta_time;
+		selectedCube->setPosition(newPos);
+	}*/
+}
+
+void AppWindow::onKeyDown(int key)
+{
+	if (key == VK_ESCAPE)
+	{
+		
+	}
+}
+
+void AppWindow::onKeyUp(int key)
+{
+
+}
+
+AppWindow* AppWindow::getInstance()
+{
+	if (sharedInstance == nullptr)
+		AppWindow::initialize();
+	return sharedInstance;
+}
+
+void AppWindow::initialize()
+{
+	sharedInstance = new AppWindow();
+	sharedInstance->init();
+}
+
+void AppWindow::destroy()
+{
+	if (sharedInstance != nullptr)
+		sharedInstance->onDestroy();
+}
+
+void AppWindow::update()
+{
+	cc.m_world.setIdentity();
+
+	cam->update(m_delta_time);
+
+	cc.m_view = cam->getViewMatrix();
+	cc.m_view.invert();
+
+	m_cb->update(GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+}
+
+void AppWindow::onCreate()
+{
+	Window::onCreate();
+
+	InputSystem::getInstance()->addListener(this);
+	GameObjectManager::initialize();
+	//InputSystem::getInstance()->showCursor(false);
+
+	cc.m_view.setIdentity();
+	cam = new Camera("Camera");
+	cam->setPosition(0, 0, -2);
+
+	RECT rc = this->getClientWindowRect();
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+	if (!isPerspective)
+		cc.m_proj.setOrthoLH(width / 400.0f, height / 400.0f, orthoNearPlane, 4.0f);
+	else
+		cc.m_proj.setPerspectiveFovLH(1.57f, (float)width / (float)height, 0.1f, 100.0f);
 }
 
 void AppWindow::onUpdate()
@@ -95,57 +182,56 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 
 	InputSystem::getInstance()->update();
-	SceneCameraHandler::getInstance()->update();
-	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0.3f, 0.4f, 1);
+
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 0, 0.3f, 0.4f, 1);
 
 	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(m_width, m_height);
-	if (EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::PLAY) {
-		GameObjectManager::getInstance()->updateAllObjects();
-		BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
-	}
-	else if (EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::EDITOR) {
-		GameObjectManager::getInstance()->updateAllObjects();
-	}
-	else if(EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::PAUSED)
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(width, height);
+
+	EngineBackend* backend = EngineBackend::getInstance();
+
+	update();
+
+	if (backend->getMode() == EngineBackend::EditorMode::PLAY)
 	{
-		if(EngineBackEnd::getInstance()->insideFrameStep())
+		BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+		GameObjectManager::getInstance()->updateAllGameObjects(m_delta_time);
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::EDITOR)
+	{
+		GameObjectManager::getInstance()->updateAllGameObjects(m_delta_time);
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::PAUSED)
+	{
+		if (backend->insideFrameStep())
 		{
-			GameObjectManager::getInstance()->updateAllObjects();
 			BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
-			EngineBackEnd::getInstance()->endFrameStep();
+			GameObjectManager::getInstance()->updateAllGameObjects(m_delta_time);
+			backend->endFrameStep();
 		}
 	}
-	GameObjectManager::getInstance()->renderAllObjects(m_width, m_height);
+
+	GameObjectManager::getInstance()->drawAllGameObjects(m_cb);
+
 	UIManager::getInstance()->drawAllUI();
 
 	m_swap_chain->present(true);
+
+	m_delta_time = EngineTime::getDeltaTime();
 }
 
 void AppWindow::onDestroy()
 {
-	ShaderLibrary::destroy();
-	SceneCameraHandler::destroy();
-	TextureManager::destroy();
-	MeshManager::destroy();
-	GameObjectManager::destroy();
 	Window::onDestroy();
-	InputSystem::getInstance()->removeListener(this);
-	InputSystem::getInstance()->destroy();
-	/*this->m_vb->release();
-	this->m_ib->release();
-	this->m_cb->release();*/
-	this->m_swap_chain->release();
-	//this->vertexShader->release();
-	//this->pixelShader->release();
 
-	GraphicsEngine::get()->release();
+	delete m_swap_chain;
+	GraphicsEngine::getInstance()->destroy();
 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-
 }
 
 void AppWindow::onFocus()
@@ -158,30 +244,25 @@ void AppWindow::onKillFocus()
 	InputSystem::getInstance()->removeListener(this);
 }
 
-void AppWindow::onKeyDown(int key)
+void AppWindow::createGraphicsWindow()
 {
+	GraphicsEngine::intialize();
+	GraphicsEngine* graphEngine = GraphicsEngine::getInstance();
+
+	RECT rc = this->getClientWindowRect();
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+	m_swap_chain = GraphicsEngine::getInstance()->getRenderSystem()->createSwapChain(this->m_hwnd, width, height);	
+
+	EngineBackend::initialize();
+
+	UIManager::initialize(this->m_hwnd);
+
+	cc.m_time = 0;
+
+	m_cb = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
 
-void AppWindow::onKeyUp(int key)
-{
-}
-
-void AppWindow::onMouseMove(const Point& delta_mouse_pos)
-{
-}
-
-void AppWindow::onLeftMouseDown(const Point& mousepos)
-{	
-}
-
-void AppWindow::onLeftMouseUp(const Point& mousepos)
-{
-}
-
-void AppWindow::onRightMouseDown(const Point& mousepos)
-{
-}
-
-void AppWindow::onRightMouseUp(const Point& mousepos)
+void AppWindow::initializeEngine()
 {
 }

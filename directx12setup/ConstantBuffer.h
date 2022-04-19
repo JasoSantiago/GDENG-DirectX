@@ -1,19 +1,19 @@
 #pragma once
 #include <d3d11.h>
-
-class DeviceContext;
+#include "Prerequisites.h"
 
 class ConstantBuffer
 {
 public:
-	ConstantBuffer();
-	bool load(void* buffer, UINT size_buffer);
-	void update(DeviceContext* context, void* buffer);
-	bool release();
+	ConstantBuffer(void* buffer, UINT size_buffer, RenderSystem* system);
 	~ConstantBuffer();
+
+	void update(DeviceContext* context, void* buffer);
+
 private:
 	ID3D11Buffer* m_buffer;
-private:
+	RenderSystem* m_system = nullptr;
+
 	friend class DeviceContext;
 };
- 
+

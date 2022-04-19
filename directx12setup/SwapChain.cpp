@@ -1,13 +1,10 @@
 #include "SwapChain.h"
-#include "GraphicsEngine.h"
+#include "RenderSystem.h"
+#include <exception>
 
-SwapChain::SwapChain()
+SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) : m_system(system)
 {
-}
-
-bool SwapChain::init(HWND hwnd, UINT width, UINT height)
-{
-	ID3D11Device* device = GraphicsEngine::get()->m_d3d_device;
+	ID3D11Device* device = m_system->m_d3d_device;
 
 	DXGI_SWAP_CHAIN_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -23,28 +20,23 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 	desc.SampleDesc.Quality = 0;
 	desc.Windowed = TRUE;
 
-	HRESULT hr = GraphicsEngine::get()->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
+
+	HRESULT hr = m_system->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
 
 	if (FAILED(hr))
-	{
-		return false;
-	}
+		throw std::exception("SwapChain not created successfully");
+
 	ID3D11Texture2D* buffer = NULL;
 	hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
 	if (FAILED(hr))
-	{
-		return false;
-	}
+		throw std::exception("SwapChain not created successfully");
 
 	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
 	buffer->Release();
 
 	if (FAILED(hr))
-	{
-		return false;
-	}
-
+		throw std::exception("SwapChain not created successfully");
 
 	D3D11_TEXTURE2D_DESC texDesc = {};
 	texDesc.Width = width;
@@ -58,9 +50,22 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 	texDesc.MiscFlags = 0;
 	texDesc.ArraySize = 1;
 	texDesc.CPUAccessFlags = 0;
-	HRESULT depthResult = device->CreateTexture2D(&texDesc, NULL, &buffer);
-	HRESULT depthSentcilResult = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
-	return true;
+
+	hr = device->CreateTexture2D(&texDesc, NULL, &buffer);
+
+	if (FAILED(hr))
+		throw std::exception("SwapChain not created successfully");
+
+	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
+	buffer->Release();
+
+	if (FAILED(hr))
+		throw std::exception("SwapChain not created successfully");
+}
+
+SwapChain::~SwapChain()
+{
+	m_swap_chain->Release();
 }
 
 bool SwapChain::present(bool vsync)
@@ -68,15 +73,4 @@ bool SwapChain::present(bool vsync)
 	m_swap_chain->Present(vsync, NULL);
 
 	return true;
-}
-
-bool SwapChain::release()
-{
-	m_swap_chain->Release();
-	delete this;
-	return true;
-}
-
-SwapChain::~SwapChain()
-{
 }

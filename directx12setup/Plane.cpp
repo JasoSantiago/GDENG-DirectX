@@ -1,103 +1,163 @@
 #include "Plane.h"
-#include "SceneCameraHandler.h"
-#include "ShaderLibrary.h"
+#include "GraphicsEngine.h"
+#include "VertexBuffer.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "ConstantBuffer.h"
+#include "DeviceContext.h"
+#include "IndexBuffer.h"
+#include "RenderSystem.h"
+#include "PhysicsComponent.h"
+#include "TextureComponent.h"
 
-Plane::Plane(std::string name, bool skipinit): AGameObject(name)
+Plane::Plane(std::string name, Vector3D pos, Vector3D scale, Vector3D color, Vector3D rot) : AGameObject(name, AGameObject::PrimitiveType::PLANE)
 {
-	if(skipinit)
-	{
-		return;
-	}
-	ShaderNames shaderNames;
-	void* shaderByteCode = NULL;
-	size_t sizeShader = 0;
-	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
+	this->localPosition = pos;
+	this->localScale = scale;
+	this->colors = color;
+	this->localRotation = rot;
+	this->localScale.y = 0.1f;
 
-	Vertex plane_list[] =
-	{
-		{Vector3D(-3.0f,-0.0f,-3.0f),    Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
-		{Vector3D(-3.0f,0.0f,3.0f),    Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
-		{ Vector3D(3.0f,-0.0f,-3.0f),   Vector3D(1.0f,1.0f,1.0f),  Vector3D(1.0f,1.0f,1.0f) },
-		{ Vector3D(3.0f,0.f,3.0f),     Vector3D(1.0f,1.0f,1.0f), Vector3D(1.0f,1.0f,1.0f) },
+	edges[0] = Vector3D(-this->localScale.x / 2.0f, -0.05f, -this->localScale.z / 2.0f);
+	edges[1] = Vector3D(-this->localScale.x / 2.0f, 0.05f, this->localScale.z / 2.0f);
+	edges[2] = Vector3D(this->localScale.x / 2.0f, -0.05f, -this->localScale.z / 2.0f);
+	edges[3] = Vector3D(this->localScale.x / 2.0f, 0.05f, this->localScale.z / 2.0f);
+
+	RenderSystem* graphEngine = GraphicsEngine::getInstance()->getRenderSystem();
+
+	PhysicsComponent* comp = new PhysicsComponent("planePhysics", this);
+	this->attachComponent(comp);
+	comp->getRigidBody()->setType(reactphysics3d::BodyType::STATIC);
+	
+	m_default_tex = GraphicsEngine::getInstance()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\blank.jpg");
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+
+	vertex list[] = {
+		{ edges[0] + this->localPosition, Vector2D(0,0) },
+		{ edges[1] + this->localPosition, Vector2D(0,1) },
+		{ edges[2] + this->localPosition, Vector2D(1,0) },
+		{ edges[3] + this->localPosition, Vector2D(1,1) }
 	};
 
-	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
-	vertex_buffer->loadQuad(plane_list, sizeof(Vertex), ARRAYSIZE(plane_list),shaderByteCode,sizeShader);
-	CBData cbData = {};
-	cbData.m_time = 0;
-	this->cosntant_buffer = GraphicsEngine::get()->createConstantBuffer();
-	this->cosntant_buffer->load(&cbData, sizeof(CBData));
+	unsigned int index_list[] = {
+		0,1,2,
+		1,3,2
+	};
+
+	UINT size_index_list = ARRAYSIZE(index_list);
+	m_ib = graphEngine->createIndexBuffer(index_list, size_index_list);
+
+	UINT size_list = ARRAYSIZE(list);
+
+	m_vs = graphEngine->createVertexShader(shader_byte_code, size_shader);
+
+	m_vb = graphEngine->createVertexBuffer(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+
+	graphEngine->releaseCompiledShader();
+
+	graphEngine->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+
+	m_ps = graphEngine->createPixelShader(shader_byte_code, size_shader);
+
+	graphEngine->releaseCompiledShader();
 }
 
 Plane::~Plane()
 {
-	this->vertex_buffer->release();
-	AGameObject::~AGameObject();
+	delete m_vb;
+	delete m_vs;
+	delete m_ps;
+	delete m_ib;
+}
+
+void Plane::setColors(Vector3D color)
+{
+	this->colors = color;
 }
 
 void Plane::update(float deltaTime)
 {
 }
 
-void Plane::draw(int width, int height)
+void Plane::draw(ConstantBuffer* cb)
 {
-	ShaderNames shaderNames;
-	GraphicsEngine* graphics_engine = GraphicsEngine::get();
-	DeviceContext* device_context = graphics_engine->getImmediateDeviceContext();
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, cb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, cb);
 
-	device_context->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
-	device_context->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
-	CBData cbData = {};
-
-	if (this->deltaPos > 1.0f)
+	std::vector<AComponent*> renderComponentList = getComponentsOfType(AComponent::ComponentType::Renderer);
+	if (renderComponentList.size() > 0)
 	{
-		this->deltaPos = 0.0f;
+		TextureComponent* texComp = (TextureComponent*)renderComponentList[0];
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, texComp->getTexture());
 	}
 	else
-	{
-		this->deltaPos += this->deltaPos * 0.1f;
-	}
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_default_tex);
 
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity();
-	translationMatrix.setTranslation(this->getLocalPosition());
-	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity();
-	scaleMatrix.setScale(this->getLocalScale());
-	Vector3D rotation = this->getRotation();
-	Matrix4x4 zMatrix;
-	zMatrix.setRotationZ(rotation.m_z);
-	Matrix4x4 yMatrix;
-	yMatrix.setRotationY(rotation.m_y);
-	Matrix4x4 xMatrix;
-	xMatrix.setRotationX(rotation.m_x);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
-	yMatrix *= zMatrix;
-	xMatrix *= yMatrix;
-	rotMatrix *= xMatrix;
-	scaleMatrix *= rotMatrix;
-	allMatrix *= scaleMatrix;
-	allMatrix *= translationMatrix;
-	//allMatrix.printMatrix();
-	cbData.m_world = allMatrix;
-
-	//cbData.m_view.setIdentity();
-	//cbData.m_proj.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
-
-	Matrix4x4 cameraMatrix = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
-	cbData.m_view = cameraMatrix;
-
-	//cbData.projMatrix.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
-	float aspectRatio = (float)width / (float)height;
-	//cbData.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 1000.0f);
-	cbData.m_proj = SceneCameraHandler::getInstance()->getProjectionViewMatrix();
-	this->cosntant_buffer->update(device_context, &cbData);
-	device_context->setConstantBuffer( this->cosntant_buffer);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+}
 
 
-	device_context->setVertexBuffer(this->vertex_buffer);
-	device_context->drawTriangleStrip(this->vertex_buffer->getSizeVertexList(), 0);
+void Plane::setScale(float x, float y, float z)
+{
+	edges[0] = Vector3D(-x / 2.0f, -0.05f, -z / 2.0f);
+	edges[1] = Vector3D(-x / 2.0f, 0.05f, z / 2.0f);
+	edges[2] = Vector3D(x / 2.0f, -0.05f, -z / 2.0f);
+	edges[3] = Vector3D(x / 2.0f, 0.05f, z / 2.0f);
+	this->localScale.y = 0.1f;
 
-	
+	AGameObject::setScale(x, y, z);
+}
+
+void Plane::setScale(Vector3D scale)
+{
+	edges[0] = Vector3D(-scale.x / 2.0f, -0.05f, -scale.z / 2.0f);
+	edges[1] = Vector3D(-scale.x / 2.0f, 0.05f, scale.z / 2.0f);
+	edges[2] = Vector3D(scale.x / 2.0f, -0.05f, -scale.z / 2.0f);
+	edges[3] = Vector3D(scale.x / 2.0f, 0.05f, scale.z / 2.0f);
+	this->localScale.y = 0.1f;
+
+	AGameObject::setScale(scale);
+}
+
+Vector3D* Plane::getVertexWorldPositions()
+{
+	Vector3D worldLocations[] = {
+		Quaternion::rotatePointEuler(edges[0], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[1], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[2], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[3], this->localRotation) + this->localPosition
+	};
+
+	return worldLocations;
+}
+
+void Plane::updateVertexLocations()
+{
+	RenderSystem* graphEngine = GraphicsEngine::getInstance()->getRenderSystem();
+
+	Vector3D* worldLocations = getVertexWorldPositions();
+
+	vertex list[] = {
+		{ worldLocations[0], Vector2D(0,0) },
+		{ worldLocations[1], Vector2D(0,1) },
+		{ worldLocations[2], Vector2D(1,0) },
+		{ worldLocations[3], Vector2D(1,1) }
+	};
+
+	UINT size_list = ARRAYSIZE(list);
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	GraphicsEngine::getInstance()->getVertexMeshLayoutShaderByteCodeAndSize(&shader_byte_code, &size_shader);
+	delete m_vb;
+	m_vb = graphEngine->createVertexBuffer(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 }

@@ -1,15 +1,15 @@
 #include "AppWindow.h"
+#include <random>
 
+int main() {
+	srand(time(NULL));
+	AppWindow::initialize();
+	AppWindow* app = AppWindow::getInstance();
+	app->createGraphicsWindow();
 
-int main()
-{
-	AppWindow app;
-	if(app.init())
-	{
-		while(app.isRun())
-		{
-			app.broadcast();
-		}
+	while (app->isRunning()) {
+		app->broadcast();
 	}
+
 	return 0;
 }

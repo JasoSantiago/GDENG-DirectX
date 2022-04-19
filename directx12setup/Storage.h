@@ -23,4 +23,3 @@ private:
 	Vector3D rot;
 	Matrix4x4 mat;
 };
-

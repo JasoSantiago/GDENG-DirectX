@@ -1,60 +1,44 @@
 #include "Window.h"
-#include "imGUI/imgui.h"
-#include "imGUI/imgui_impl_dx11.h"
+#include "IMGUI/imgui.h"
 
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+Window* window = nullptr;
 
 Window::Window()
 {
-
 }
 
+Window::~Window()
+{
+}
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 		return true;
-	
-	switch (msg)
-	{
-	case WM_CREATE:
-	{
-		Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
 
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
+	switch (msg) {
+	case WM_CREATE:
+		//Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
+
+		//SetWindowLongPtr(hwnd, GWL_USERDATA, (LONG_PTR)window);
 		window->setHWND(hwnd);
 		window->onCreate();
 		break;
-	}
-
-	case WM_SETFOCUS:
-	{
-
-		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-		window->onFocus();
-		break;
-			
-	}	
-		case WM_KILLFOCUS:
-	{
-
-		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-		window->onKillFocus();
-		break;
-			
-	}	
-		
 	case WM_DESTROY:
-	{
-
-		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		//Window* window = (Window*)GetWindowLong(hwnd, GWL_USERDATA);
 		window->onDestroy();
 		::PostQuitMessage(0);
 		break;
-	}
-
-
+	case WM_SETFOCUS:
+		//Window* window = (Window*)GetWindowLong(hwnd, GWL_USERDATA);
+		window->onFocus();
+		break;
+	case WM_KILLFOCUS:
+		//Window* window = (Window*)GetWindowLong(hwnd, GWL_USERDATA);
+		window->onKillFocus();
+		break;
 	default:
 		return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
@@ -62,15 +46,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return NULL;
 }
 
-
 bool Window::init()
 {
-	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	if (SUCCEEDED(hr)) {
-		std::cout << "CoInitialize Success\n";
-	}
-
-
 	WNDCLASSEX wc;
 	wc.cbClsExtra = NULL;
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -88,10 +65,11 @@ bool Window::init()
 	if (!::RegisterClassEx(&wc))
 		return false;
 
+	if (!window)
+		window = this;
 
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application",
-		WS_CAPTION | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1440, 900,
-		NULL, NULL, NULL, this);
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, WIDTH, HEIGHT,
+		NULL, NULL, NULL, NULL);
 
 	if (!m_hwnd)
 		return false;
@@ -99,11 +77,8 @@ bool Window::init()
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
-
-	m_isrun = true;
-	
+	m_is_running = true;
 	EngineTime::initialize();
-
 	return true;
 }
 
@@ -112,10 +87,9 @@ bool Window::broadcast()
 	EngineTime::LogFrameStart();
 	MSG msg;
 
-	this->onUpdate();
+	window->onUpdate();
 
-	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
-	{
+	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -125,7 +99,6 @@ bool Window::broadcast()
 	return true;
 }
 
-
 bool Window::release()
 {
 	if (!::DestroyWindow(m_hwnd))
@@ -134,15 +107,16 @@ bool Window::release()
 	return true;
 }
 
-bool Window::isRun()
+bool Window::isRunning()
 {
-	return m_isrun;
+	return m_is_running;
 }
 
 RECT Window::getClientWindowRect()
 {
 	RECT rc;
 	::GetClientRect(this->m_hwnd, &rc);
+
 	return rc;
 }
 
@@ -161,7 +135,7 @@ void Window::onUpdate()
 
 void Window::onDestroy()
 {
-	m_isrun = false;
+	m_is_running = false;
 }
 
 void Window::onFocus()
@@ -170,9 +144,4 @@ void Window::onFocus()
 
 void Window::onKillFocus()
 {
-}
-
-Window::~Window()
-{
-	
 }

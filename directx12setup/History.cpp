@@ -1,6 +1,6 @@
 #include "History.h"
 #include "Storage.h"
-#include "EngineBackEnd.h"
+#include "EngineBackend.h"
 
 History* History::sharedInstance = nullptr;
 
@@ -21,7 +21,7 @@ void History::destroy()
 
 void History::recordHistory(AGameObject* agameObject)
 {
-	if(EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::EDITOR)
+	if (EngineBackend::getInstance()->getMode() == EngineBackend::EditorMode::EDITOR)
 	{
 		std::cout << "hi";
 		Storage* storage = new Storage(agameObject);
@@ -47,9 +47,9 @@ bool History::hasRemainingRedoActions()
 
 Storage* History::undoAction()
 {
-	if(EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::EDITOR)
+	if (EngineBackend::getInstance()->getMode() == EngineBackend::EditorMode::EDITOR)
 	{
-		if(this->hasRemainingUndoActions())
+		if (this->hasRemainingUndoActions())
 		{
 			Storage* storage = this->actionsPerformed.top();
 			this->actionsPerformed.pop();
@@ -61,7 +61,7 @@ Storage* History::undoAction()
 
 Storage* History::redoAction()
 {
-	if (EngineBackEnd::getInstance()->getMode() == EngineBackEnd::EditorMode::EDITOR)
+	if (EngineBackend::getInstance()->getMode() == EngineBackend::EditorMode::EDITOR)
 	{
 		if (this->hasRemainingRedoActions())
 		{

@@ -1,28 +1,37 @@
 #pragma once
 #include "InputListener.h"
-#include <map>
+#include <unordered_set>
 #include "Point.h"
-
-
 
 class InputSystem
 {
 public:
 	static InputSystem* getInstance();
-	static void initialize();
+	static void intialize();
 	static void destroy();
 
-public:
 	void update();
-	void addListener(InputListener* inputListener);
-	void removeListener(InputListener* inputListener);
+	void addListener(InputListener* listener);
+	void removeListener(InputListener* listener);
+
+	void setCursorPosition(const Point& pos);
+	void showCursor(bool show);
+
+	bool isKeyDown(int key);
+	bool isKeyUp(int key);
+
 private:
-	std::map<InputListener*, InputListener*> m_map_listener;
-	unsigned char m_keys_state[256] = {};
-	unsigned char m_old_keys_state[256] = {};
-	Point oldMousePos;
-	bool firstCheck = true;
+	InputSystem();
+	~InputSystem();
+	InputSystem(InputSystem const&) {};
+	InputSystem& operator=(InputSystem const&) {};
 	static InputSystem* sharedInstance;
 
+	std::unordered_set<InputListener*> set_listeners;
+	unsigned char key_states[256] = {};
+	unsigned char old_key_states[256] = {};
 
+	Point old_mouse_pos;
+	bool first_time = true;
 };
+

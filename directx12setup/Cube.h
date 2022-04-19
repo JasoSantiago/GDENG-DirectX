@@ -1,41 +1,52 @@
 #pragma once
 #include "AGameObject.h"
-#include "GraphicsEngine.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "ConstantBuffer.h"
-#include "DeviceContext.h"
-#include "SceneCameraHandler.h"
+#include "PhysicsComponent.h"
 
-
-class Cube: public AGameObject
+class Cube : public AGameObject
 {
 public:
-	Cube(std::string name, bool skipint = false);
+	Cube(std::string name, Vector3D pos, Vector3D scale, Vector3D color, Vector3D rot, bool hasPhysics);
 	~Cube();
 
-	void update(float deltaTime) override;
-	void draw(int width, int height) override;
-	void setAnimSpeed(float speed);
-	void rotateCubex(float value, float deltaTime); 
-	void rotateCubey(float value, float deltaTime);
-	void restoreState() override;
+	void setColors(Vector3D color);
+	virtual void update(float deltaTime) override;
+	virtual void draw(ConstantBuffer* cb) override;
+
+	virtual void setPosition(float x, float y, float z) override;
+	virtual void setPosition(Vector3D pos) override;
+
+	virtual void setScale(float x, float y, float z) override;
+	virtual void setScale(Vector3D scale) override;
+
+	virtual void setRotation(float x, float y, float z) override;
+	virtual void setRotation(Vector3D rot) override;
+
+	Vector3D* getVertexWorldPositions();
 	
-protected:
-	VertexBuffer* vertex_buffer;
-	IndexBuffer* index_buffer;
-	ConstantBuffer* cosntant_buffer;
-	float ticks = 0.0f;
-	float deltaPos = 0.0f;
-	float deltaTime = 0.0f;
-	float speed = 10.0f;
-	float rot_x = 0.0f;
-	float rot_y = 0.0f;
+	void attachPhysicsComponent();
+	float checkRaycast(Vector3D rayOrigin, Vector3D rayDirection);
+
 private:
-	struct Vertex {
-		Vector3D position;
-		Vector3D color;
-		Vector3D color2;
-	};
+	virtual void updateVertexLocations() override;
+
+	Vector3D colors;
+	Vector3D colors2[8];
+
+	float rot_x = 0;
+	float rot_y = 0;
+	float speed = 1;
+
+	Vector3D edges[8];
+	PhysicsComponent* component;
+	class VertexBuffer* m_vb;
+	class VertexShader* m_vs;
+	class PixelShader* m_ps;
+	class IndexBuffer* m_ib;
+
+	class BoundingBox* collisionBox;
+
+	class Texture* m_default_tex;
+
+	class Mesh* m_mesh;
 };
 

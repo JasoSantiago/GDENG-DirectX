@@ -1,13 +1,12 @@
 #pragma once
 #include "AUIScreen.h"
-
-class UIManager;
 class ProfilerScreen : public AUIScreen
 {
-private:
+public:
 	ProfilerScreen();
 	~ProfilerScreen();
 
+	// Inherited via AUIScreen
 	virtual void drawUI() override;
-	friend class UIManager;
 };
+

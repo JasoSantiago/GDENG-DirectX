@@ -1,168 +1,354 @@
 #include "Cube.h"
+#include "GraphicsEngine.h"
+#include "VertexBuffer.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "ConstantBuffer.h"
+#include "DeviceContext.h"
+#include "IndexBuffer.h"
+#include "BoundingBox.h"
+#include <random>
+#include "RenderSystem.h"
+#include "Texture.h"
+#include "TextureComponent.h"
+#include "PhysicsComponent.h"
 
-#include "ShaderLibrary.h"
-
-
-Cube::Cube(std::string name, bool skipinit): AGameObject(name)
+Cube::Cube(std::string name, Vector3D pos, Vector3D scale, Vector3D color, Vector3D rot, bool hasPhysics) : AGameObject(name, AGameObject::PrimitiveType::CUBE)
 {
-	if(skipinit)
-	{
-		return;
-	}
+	this->localPosition = pos;
+	this->localScale = scale;
+	this->colors = color;
+	this->localRotation = rot;
+	this->hasPhysics = hasPhysics;
+	this->speed = rand() % 100 / 100.0f + 0.5f;
 
-	ShaderNames shaderNames;
-	void* shaderByteCode = NULL;
-	size_t sizeShader = 0;
-	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
-	Vertex vertex_list[] =
-	{
-		//X - Y - Z
-		//FRONT FACE
-		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
-		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+	/*this->colors2[0] = Vector3D(1, 0, 1);
+	this->colors2[1] = Vector3D(1, 1, 0);
+	this->colors2[2] = Vector3D(0, 1, 1);
+	this->colors2[3] = Vector3D(0, 0, 1);
+	this->colors2[4] = Vector3D(0, 1, 0);
+	this->colors2[5] = Vector3D(1, 0, 0);
+	this->colors2[6] = Vector3D(1, 1, 1);
+	this->colors2[7] = Vector3D(0, 0, 0);*/
+	if(this->hasPhysics)
+		this->attachComponent(new PhysicsComponent("cubePhysics", this));
+	m_default_tex = GraphicsEngine::getInstance()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\blank.jpg");
 
-		//BACK FACE
-		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
+	edges[0] = Vector3D(-this->localScale.x / 2.0f, -this->localScale.y / 2.0f, -this->localScale.z / 2.0f);
+	edges[1] = Vector3D(-this->localScale.x / 2.0f, this->localScale.y / 2.0f, -this->localScale.z / 2.0f);
+	edges[2] = Vector3D(this->localScale.x / 2.0f, this->localScale.y / 2.0f, -this->localScale.z / 2.0f);
+	edges[3] = Vector3D(this->localScale.x / 2.0f, -this->localScale.y / 2.0f, -this->localScale.z / 2.0f);
+	edges[4] = Vector3D(this->localScale.x / 2.0f, -this->localScale.y / 2.0f, this->localScale.z / 2.0f);
+	edges[5] = Vector3D(this->localScale.x / 2.0f, this->localScale.y / 2.0f, this->localScale.z / 2.0f);
+	edges[6] = Vector3D(-this->localScale.x / 2.0f, this->localScale.y / 2.0f, this->localScale.z / 2.0f);
+	edges[7] = Vector3D(-this->localScale.x / 2.0f, -this->localScale.y / 2.0f, this->localScale.z / 2.0f);
 
+	collisionBox = new BoundingBox(this->localPosition, this->localRotation, 1.0f * this->localScale.x, 1.0f * this->localScale.y, 1.0f * this->localScale.z);
+
+	RenderSystem* graphEngine = GraphicsEngine::getInstance()->getRenderSystem();
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+
+	Vector3D* worldLocations = getVertexWorldPositions();
+
+	Vector3D positionList[] = {
+		worldLocations[0],
+		worldLocations[1],
+		worldLocations[2],
+		worldLocations[3],
+
+		worldLocations[4],
+		worldLocations[5],
+		worldLocations[6],
+		worldLocations[7],
 	};
 
-	this->vertex_buffer = GraphicsEngine::get()->createVertexBuffer();
-	//Quad::createQuad(vertex_list, vertex_buffer, shaderByteCode, sizeShader, ARRAYSIZE(vertex_list));
-	vertex_buffer->loadQuad(vertex_list, sizeof(Vertex), ARRAYSIZE(vertex_list), shaderByteCode, sizeShader);
+	Vector2D texcoordList[] = {
+		/*{worldLocations[0],	this->colors},
+		{ worldLocations[1],	this->colors },
+		{ worldLocations[2],	this->colors },
+		{ worldLocations[3],	this->colors },
+
+		{ worldLocations[4],	this->colors },
+		{ worldLocations[5],	this->colors },
+		{ worldLocations[6],	this->colors },
+		{ worldLocations[7],	this->colors },*/
+		Vector2D(0,0),
+		Vector2D(0,1),
+		Vector2D(1,0),
+		Vector2D(1,1)
+	};
+
+	vertex vertexList[] = {
+		{ positionList[0],texcoordList[1] },
+		{ positionList[1],texcoordList[0] },
+		{ positionList[2],texcoordList[2] },
+		{ positionList[3],texcoordList[3] },
 
 
-	unsigned int index_list[] =
-	{
-		//FRONT SIDE
-		0,1,2,  //FIRST TRIANGLE
-		2,3,0,  //SECOND TRIANGLE
-		//BACK SIDE
+		{ positionList[4],texcoordList[1] },
+		{ positionList[5],texcoordList[0] },
+		{ positionList[6],texcoordList[2] },
+		{ positionList[7],texcoordList[3] },
+
+
+		{ positionList[1],texcoordList[1] },
+		{ positionList[6],texcoordList[0] },
+		{ positionList[5],texcoordList[2] },
+		{ positionList[2],texcoordList[3] },
+
+		{ positionList[7],texcoordList[1] },
+		{ positionList[0],texcoordList[0] },
+		{ positionList[3],texcoordList[2] },
+		{ positionList[4],texcoordList[3] },
+
+		{ positionList[3],texcoordList[1] },
+		{ positionList[2],texcoordList[0] },
+		{ positionList[5],texcoordList[2] },
+		{ positionList[4],texcoordList[3] },
+
+		{ positionList[7],texcoordList[1] },
+		{ positionList[6],texcoordList[0] },
+		{ positionList[1],texcoordList[2] },
+		{ positionList[0],texcoordList[3] }
+	};
+
+	UINT size_list = ARRAYSIZE(vertexList);
+
+	unsigned int index_list[] = {
+		0,1,2,  
+		2,3,0,  
+		
 		4,5,6,
 		6,7,4,
-		//TOP SIDE
-		1,6,5,
-		5,2,1,
-		//BOTTOM SIDE
-		7,0,3,
-		3,4,7,
-		//RIGHT SIDE
-		3,2,5,
-		5,4,3,
-		//LEFT SIDE
-		7,6,1,
-		1,0,7
+		
+		8,9,10,
+		10,11,8,
+		
+		12,13,14,
+		14,15,12,
+		
+		16,17,18,
+		18,19,16,
+		
+		20,21,22,
+		22,23,20
 	};
 
-	index_buffer = GraphicsEngine::get()->createIndexBuffer();
 	UINT size_index_list = ARRAYSIZE(index_list);
+	m_ib = graphEngine->createIndexBuffer(index_list, size_index_list);
 
-	index_buffer->load(index_list, size_index_list);
-	CBData cbData = {};
-	cbData.m_time = 0;
-	this->cosntant_buffer = GraphicsEngine::get()->createConstantBuffer();
-	this->cosntant_buffer->load(&cbData, sizeof(CBData)); 
+	m_vs = graphEngine->createVertexShader(shader_byte_code, size_shader);
 
+	m_vb = graphEngine->createVertexBuffer(vertexList, sizeof(vertex), size_list, shader_byte_code, size_shader);
+
+	graphEngine->releaseCompiledShader();
+
+	graphEngine->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+
+	m_ps = graphEngine->createPixelShader(shader_byte_code, size_shader);
+
+	graphEngine->releaseCompiledShader();
 }
 
 Cube::~Cube()
 {
-	this->vertex_buffer->release();
-	this->index_buffer->release();
-	AGameObject::~AGameObject();
+	delete collisionBox;
+
+	delete m_vb;
+	delete m_vs;
+	delete m_ps;
+	delete m_ib;
+}
+
+void Cube::setPosition(float x, float y, float z)
+{
+	AGameObject::setPosition(x, y, z);
+	//collisionBox->setPosition(this->localPosition);
+}
+
+void Cube::setPosition(Vector3D pos)
+{
+	AGameObject::setPosition(pos);
+	//collisionBox->setPosition(this->localPosition);
+}
+
+void Cube::setScale(float x, float y, float z)
+{
+	edges[0] = Vector3D(-x / 2.0f, -y / 2.0f, -z / 2.0f);
+	edges[1] = Vector3D(-x / 2.0f, y / 2.0f, -z / 2.0f);
+	edges[2] = Vector3D(x / 2.0f, y / 2.0f, -z / 2.0f);
+	edges[3] = Vector3D(x / 2.0f, -y / 2.0f, -z / 2.0f);
+	edges[4] = Vector3D(x / 2.0f, -y / 2.0f, z / 2.0f);
+	edges[5] = Vector3D(x / 2.0f, y / 2.0f, z / 2.0f);
+	edges[6] = Vector3D(-x / 2.0f, y / 2.0f, z / 2.0f);
+	edges[7] = Vector3D(-x / 2.0f, -y / 2.0f, z / 2.0f);
+
+	AGameObject::setScale(x, y, z);
+	collisionBox->setDimensions(1.0f * this->localScale.x, 1.0f * this->localScale.y, 1.0f * this->localScale.z);
+}
+
+void Cube::setScale(Vector3D newScale)
+{
+	edges[0] = Vector3D(-newScale.x / 2.0f, -newScale.y / 2.0f, -newScale.z / 2.0f);
+	edges[1] = Vector3D(-newScale.x / 2.0f, newScale.y / 2.0f, -newScale.z / 2.0f);
+	edges[2] = Vector3D(newScale.x / 2.0f, newScale.y / 2.0f, -newScale.z / 2.0f);
+	edges[3] = Vector3D(newScale.x / 2.0f, -newScale.y / 2.0f, -newScale.z / 2.0f);
+	edges[4] = Vector3D(newScale.x / 2.0f, -newScale.y / 2.0f, newScale.z / 2.0f);
+	edges[5] = Vector3D(newScale.x / 2.0f, newScale.y / 2.0f, newScale.z / 2.0f);
+	edges[6] = Vector3D(-newScale.x / 2.0f, newScale.y / 2.0f, newScale.z / 2.0f);
+	edges[7] = Vector3D(-newScale.x / 2.0f, -newScale.y / 2.0f, newScale.z / 2.0f);
+
+	AGameObject::setScale(newScale);
+	//collisionBox->setDimensions(1.0f * this->localScale.x, 1.0f * this->localScale.y, 1.0f * this->localScale.z);
+}
+
+void Cube::setColors(Vector3D color)
+{
+	this->colors = color;
+
+	updateVertexLocations();
+}
+
+void Cube::setRotation(float x, float y, float z)
+{
+	AGameObject::setRotation(x, y, z);
+	//collisionBox->setRotation(Vector3D(x, y, z));
+}
+
+void Cube::setRotation(Vector3D rotation)
+{
+	AGameObject::setRotation(rotation);
+	//collisionBox->setRotation(rotation);
 }
 
 void Cube::update(float deltaTime)
 {
-	/*this->deltaTime = deltaTime;
-	this->ticks += deltaTime;
-	float rotSpeed = this->ticks * this->speed;*/
-	//this->setRotation(this->rot_x, this->rot_y, 0.0f);
+	//rot_x += deltaTime * speed;
+
+	//rot_y += deltaTime * speed;
+
+	//this->setRotation(rot_x, rot_y, 0);
 }
 
-void Cube::draw(int width, int height)
+void Cube::draw(ConstantBuffer* cb)
 {
-	ShaderNames shaderNames;
-	GraphicsEngine* graphics_engine = GraphicsEngine::get();
-	DeviceContext* device_context = graphics_engine->getImmediateDeviceContext();
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, cb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, cb);
 
-	device_context->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
-	device_context->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
-
-	CBData cbData = {};
-
-	if(this->deltaPos > 1.0f)
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
+	
+	std::vector<AComponent*> renderComponentList = getComponentsOfType(AComponent::ComponentType::Renderer);
+	if (renderComponentList.size() > 0)
 	{
-		this->deltaPos = 0.0f;
+		TextureComponent* texComp = (TextureComponent*)renderComponentList[0];
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, texComp->getTexture());
 	}
 	else
-	{
-		this->deltaPos += this->deltaPos * 0.1f;
-	}
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_default_tex);
 
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity();
-	translationMatrix.setTranslation(this->getLocalPosition());
-	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity();
-	scaleMatrix.setScale(this->getLocalScale());
-	Vector3D rotation = this->getRotation();
-	Matrix4x4 zMatrix;
-	zMatrix.setRotationZ(rotation.m_z);
-	Matrix4x4 yMatrix;
-	yMatrix.setRotationY(rotation.m_y);
-	Matrix4x4 xMatrix;
-	xMatrix.setRotationX(rotation.m_x);
 
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
-	yMatrix *= zMatrix;
-	xMatrix *= yMatrix;
-	rotMatrix *= xMatrix;
-	scaleMatrix *= rotMatrix;
-	allMatrix *= scaleMatrix;
-	allMatrix *= translationMatrix;
-	//allMatrix.printMatrix();
-	this->localMatrix = allMatrix;
-	cbData.m_world = this->localMatrix;
 
-	//cbData.m_view.setIdentity();
-	//cbData.m_proj.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	Matrix4x4 cameraMatrix = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
-	cbData.m_view = cameraMatrix;
-
-	//cbData.projMatrix.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
-	float aspectRatio = (float)width / (float)height;
-	//cbData.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 1000.0f);
-	cbData.m_proj = SceneCameraHandler::getInstance()->getProjectionViewMatrix();	
-	this->cosntant_buffer->update(device_context, &cbData);
-	device_context->setConstantBuffer(this->cosntant_buffer);
-
-	device_context->setIndexBuffer(this->index_buffer);
-	device_context->setVertexBuffer(this->vertex_buffer);
-	device_context->drawIndexedTriangleList(this->index_buffer->getSizeIndexList(), 0, 0);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 }
 
-
-void Cube::setAnimSpeed(float speed)
+Vector3D* Cube::getVertexWorldPositions()
 {
-	this->speed = speed;
+	Vector3D worldLocations[] = {
+		Quaternion::rotatePointEuler(edges[0], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[1], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[2], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[3], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[4], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[5], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[6], this->localRotation) + this->localPosition,
+		Quaternion::rotatePointEuler(edges[7], this->localRotation) + this->localPosition,
+	};
+
+	return worldLocations;
 }
 
-void Cube::rotateCubex(float value, float deltaTime)
+void Cube::attachPhysicsComponent()
 {
-	this->rot_x += value * deltaTime;
+	this->component = new PhysicsComponent("PhysicsComponent" + this->name, this);
+	this->attachComponent(this->component);
 }
 
-void Cube::rotateCubey(float value, float deltaTime)
+float Cube::checkRaycast(Vector3D rayOrigin, Vector3D rayDirection)
 {
-	this->rot_y += value * deltaTime;
+	return collisionBox->checkRaycast(rayOrigin, rayDirection);
 }
 
-void Cube::restoreState()
+void Cube::updateVertexLocations()
 {
-	AGameObject::restoreState();
+	RenderSystem* graphEngine = GraphicsEngine::getInstance()->getRenderSystem();
+
+	Vector3D* worldLocations = getVertexWorldPositions();
+
+	Vector3D positionList[] = {
+		worldLocations[0],
+		worldLocations[1],
+		worldLocations[2],
+		worldLocations[3],
+
+		worldLocations[4],
+		worldLocations[5],
+		worldLocations[6],
+		worldLocations[7],
+	};
+
+	Vector2D texcoordList[] = {
+		Vector2D(0,0),
+		Vector2D(0,1),
+		Vector2D(1,0),
+		Vector2D(1,1)
+	};
+
+	vertex vertexList[] = {
+		{ positionList[0],texcoordList[1] },
+		{ positionList[1],texcoordList[0] },
+		{ positionList[2],texcoordList[2] },
+		{ positionList[3],texcoordList[3] },
+
+
+		{ positionList[4],texcoordList[1] },
+		{ positionList[5],texcoordList[0] },
+		{ positionList[6],texcoordList[2] },
+		{ positionList[7],texcoordList[3] },
+
+
+		{ positionList[1],texcoordList[1] },
+		{ positionList[6],texcoordList[0] },
+		{ positionList[5],texcoordList[2] },
+		{ positionList[2],texcoordList[3] },
+
+		{ positionList[7],texcoordList[1] },
+		{ positionList[0],texcoordList[0] },
+		{ positionList[3],texcoordList[2] },
+		{ positionList[4],texcoordList[3] },
+
+		{ positionList[3],texcoordList[1] },
+		{ positionList[2],texcoordList[0] },
+		{ positionList[5],texcoordList[2] },
+		{ positionList[4],texcoordList[3] },
+
+		{ positionList[7],texcoordList[1] },
+		{ positionList[6],texcoordList[0] },
+		{ positionList[1],texcoordList[2] },
+		{ positionList[0],texcoordList[3] }
+	};
+
+	UINT size_list = ARRAYSIZE(vertexList);
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	GraphicsEngine::getInstance()->getVertexMeshLayoutShaderByteCodeAndSize(&shader_byte_code, &size_shader);
+	delete m_vb;
+	m_vb = graphEngine->createVertexBuffer(vertexList, sizeof(vertex), size_list, shader_byte_code, size_shader);
 }

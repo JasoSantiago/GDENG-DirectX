@@ -5,27 +5,26 @@
 class VertexMesh
 {
 public:
-	VertexMesh() :m_position(), m_texcoord()
+	VertexMesh() : m_position(), m_texcoord()
 	{
 
 	}
 
-	VertexMesh(Vector3D position, Vector2D texcoord) :m_position(position), m_texcoord(texcoord)
+	VertexMesh(Vector3D position, Vector2D texcoord) : m_position(position), m_texcoord(texcoord)
 	{
 
 	}
 
-	VertexMesh(const VertexMesh& vertex) :m_position(vertex.m_position), m_texcoord(vertex.m_texcoord)
+	VertexMesh(const VertexMesh& vertexMesh) : m_position(vertexMesh.m_position), m_texcoord(vertexMesh.m_texcoord)
 	{
 
 	}
+
 	~VertexMesh()
 	{
 
 	}
 
-	
-public:
 	Vector3D m_position;
 	Vector2D m_texcoord;
 };

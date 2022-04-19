@@ -1,60 +1,79 @@
-#include "EngineBackEnd.h"
+#include "EngineBackend.h"
+
 #include "GameObjectManager.h"
 
-EngineBackEnd* EngineBackEnd::sharedInstance = nullptr;
+EngineBackend* EngineBackend::sharedInstance = nullptr;
 
-EngineBackEnd* EngineBackEnd::getInstance()
+EngineBackend* EngineBackend::getInstance()
 {
-	return sharedInstance;
+    if (sharedInstance == nullptr)
+        EngineBackend::initialize();
+    return sharedInstance;
 }
 
-void EngineBackEnd::initialize()
+void EngineBackend::initialize()
 {
-	sharedInstance = new EngineBackEnd();
+    sharedInstance = new EngineBackend();
+    sharedInstance->init();
 }
 
-void EngineBackEnd::destroy()
+void EngineBackend::destroy()
 {
-	delete sharedInstance;
+    sharedInstance->release();
+    delete sharedInstance;
 }
 
-void EngineBackEnd::setMode(EditorMode mode)
+EngineBackend::EditorMode EngineBackend::getMode()
 {
-	this->editorMode = mode;
-	if(this->editorMode == EditorMode::PLAY)
-	{
-		GameObjectManager::getInstance()->saveStates();
-	}
-	else if(this->editorMode == EditorMode::EDITOR)
-	{
-		GameObjectManager::getInstance()->restoreStates();
-	}
+    return sharedInstance->editorMode;
 }
 
-void EngineBackEnd::startFrameStep()
+void EngineBackend::playEditor()
 {
-	this->frameStepping = true;
+    sharedInstance->editorMode = EngineBackend::EditorMode::PLAY;
+    GameObjectManager::getInstance()->saveStates();
 }
 
-void EngineBackEnd::endFrameStep()
+void EngineBackend::pauseEditor()
 {
-	this->frameStepping = false;
+    sharedInstance->editorMode = EngineBackend::EditorMode::PAUSED;
 }
 
-bool EngineBackEnd::insideFrameStep()
+void EngineBackend::returnToEditor()
 {
-	return this->frameStepping;
+    sharedInstance->editorMode = EngineBackend::EditorMode::EDITOR;
+    GameObjectManager::getInstance()->restoreStates();
 }
 
-EngineBackEnd::EditorMode EngineBackEnd::getMode()
+bool EngineBackend::insideFrameStep()
 {
-	return this->editorMode;
+    return sharedInstance->isFrameStepping;
 }
 
-EngineBackEnd::EngineBackEnd()
+void EngineBackend::startFrameStep()
+{
+    sharedInstance->isFrameStepping = true;
+}
+
+void EngineBackend::endFrameStep()
+{
+    sharedInstance->isFrameStepping = false;
+}
+
+EngineBackend::EngineBackend()
 {
 }
 
-EngineBackEnd::~EngineBackEnd()
+EngineBackend::~EngineBackend()
+{
+}
+
+void EngineBackend::init()
+{
+    sharedInstance->isFrameStepping = false;
+    sharedInstance->editorMode = EngineBackend::EditorMode::EDITOR;
+}
+
+void EngineBackend::release()
 {
 }

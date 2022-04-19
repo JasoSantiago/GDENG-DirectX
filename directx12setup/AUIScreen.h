@@ -6,7 +6,6 @@ class UIManager;
 class AUIScreen
 {
 protected:
-
 	AUIScreen(std::string name);
 	~AUIScreen();
 
@@ -17,3 +16,4 @@ protected:
 
 	friend class UIManager;
 };
+

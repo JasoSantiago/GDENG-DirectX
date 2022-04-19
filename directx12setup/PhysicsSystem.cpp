@@ -1,75 +1,62 @@
 #include "PhysicsSystem.h"
-
-#include "EngineTIme.h"
 #include "PhysicsComponent.h"
+#include <iostream>
+#include "EngineTime.h"	
 
 PhysicsSystem::PhysicsSystem()
 {
-	this->physicsCommon = new PhysicsCommon();
-	PhysicsWorld::WorldSettings WorldSettings;
-	WorldSettings.defaultVelocitySolverNbIterations = 50;
-	WorldSettings.gravity = Vector3(0, -9.8, 0);
-	this->physicsWorld = this->physicsCommon->createPhysicsWorld(WorldSettings);
+	this->physicsCommon = new reactphysics3d::PhysicsCommon();
+	reactphysics3d::PhysicsWorld::WorldSettings settings;
+	settings.defaultVelocitySolverNbIterations = 50;
+	settings.gravity = reactphysics3d::Vector3(0, -9.81, 0);
+	this->physicsWorld = this->physicsCommon->createPhysicsWorld(settings);
+	std::cout << "Successfully created physics world \n";
+	delta = -1;
 }
 
 PhysicsSystem::~PhysicsSystem()
 {
+	this->physicsCommon->destroyPhysicsWorld(this->physicsWorld);
 	delete this->physicsCommon;
 }
 
-void PhysicsSystem::registerComponent(PhysicsComponent* phyComp)
+void PhysicsSystem::registerComponent(PhysicsComponent* component)
 {
-	this->componentTable[phyComp->getName()] = phyComp;
-	this->componentList.push_back(phyComp);
+	this->componentList.push_back(component);
+	this->componentTable[component->getName()] = component;
 }
 
-void PhysicsSystem::unregisterComponent(PhysicsComponent* phyComp)
+void PhysicsSystem::unregisterComponent(PhysicsComponent* component)
 {
-	if(this->componentTable[phyComp->getName()] != nullptr)
+	if (this->componentTable[component->getName()] != nullptr)
 	{
-		this->componentTable.erase(phyComp->getName());
+		this->componentTable.erase(component->getName());
 		int index = -1;
-		for(int i = 0; i<this->componentList.size(); i++)
+		for (int i = 0; i < this->componentList.size(); i++)
 		{
-			if(this->componentList[i] == phyComp)
+			if (this->componentList[i] == component)
 			{
 				index = i;
 				break;
 			}
 		}
-
-		if(index != -1)
+		if (index != -1)
 		{
 			this->componentList.erase(this->componentList.begin() + index);
 		}
-	}
-	else
-	{
-		std::cout << "Component does not exist";
 	}
 }
 
 void PhysicsSystem::unregisterComponentByName(std::string name)
 {
-	if(this->componentTable[name] != nullptr)
-	{
-		this->unregisterComponent(this->componentTable[name]);
-	}
-	else
-	{
-		std::cout << "Failed to unregister Component";
-	}
+	PhysicsComponent* comp = this->componentTable[name];
+	this->componentTable.erase(name);
+	this->componentList.erase(std::remove(componentList.begin(), componentList.end(), comp), componentList.end());
 }
 
 PhysicsComponent* PhysicsSystem::findComponentByName(std::string name)
 {
-	if (this->componentTable[name] != nullptr) {
-		return this->componentTable[name];
-	}
-	else {
-		std::cout << "Component does not exist";
-		return nullptr;
-	}
+	return this->componentTable[name];
 }
 
 std::vector<PhysicsComponent*> PhysicsSystem::getAllComponents()
@@ -79,21 +66,31 @@ std::vector<PhysicsComponent*> PhysicsSystem::getAllComponents()
 
 void PhysicsSystem::updateAllComponents()
 {
-	if (EngineTime::getDeltaTime() > 0.0f) {
-		this->physicsWorld->update(EngineTime::getDeltaTime());
-		for (int i = 0; i < componentList.size(); i++)
+	if (delta == -1)
+	{
+		delta = 0;
+	}
+	else
+	{
+		delta += EngineTime::getDeltaTime();
+		while (delta >= timeStep)
 		{
-			this->componentList[i]->perform(EngineTime::getDeltaTime());
+			this->physicsWorld->update(timeStep);
+			for (int i = 0; i < this->componentList.size(); i++)
+			{
+				this->componentList[i]->perform(timeStep);
+			}
+			delta -= timeStep;
 		}
 	}
 }
 
-PhysicsWorld* PhysicsSystem::getPhysicsWorld()
+reactphysics3d::PhysicsWorld* PhysicsSystem::getPhysicsWorld()
 {
 	return this->physicsWorld;
 }
 
-PhysicsCommon* PhysicsSystem::getPhysicsCommon()
+reactphysics3d::PhysicsCommon* PhysicsSystem::getPhysicsCommon()
 {
 	return this->physicsCommon;
 }

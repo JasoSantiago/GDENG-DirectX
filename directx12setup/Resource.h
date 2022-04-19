@@ -6,6 +6,8 @@ class Resource
 public:
 	Resource(const wchar_t* fullPath);
 	virtual ~Resource();
+	
 protected:
-	std::wstring fullPath;
+	std::wstring m_full_path;
 };
+

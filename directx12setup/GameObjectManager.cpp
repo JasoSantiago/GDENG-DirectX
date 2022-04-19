@@ -1,204 +1,140 @@
-
 #include "GameObjectManager.h"
-#include "EngineTime.h"
-#include "Cube.h"
-#include "Plane.h"
-#include "AGameObject.h"
-#include "PhysicsCube.h"
-#include "PhysicsPlane.h"
-#include "TexturedCube.h"
 
-GameObjectManager* GameObjectManager::sharedInstance = NULL;
+#include <iostream>
+
+#include "AGameObject.h"
+#include "EditorAction.h"
+#include "ActionHistory.h"
+
+GameObjectManager* GameObjectManager::sharedInstance = nullptr;
 
 GameObjectManager* GameObjectManager::getInstance()
 {
-	return sharedInstance;
+    if (sharedInstance == nullptr)
+        GameObjectManager::initialize();
+    return sharedInstance;
 }
 
 void GameObjectManager::initialize()
 {
-	sharedInstance = new GameObjectManager();
+    sharedInstance = new GameObjectManager();
+    sharedInstance->init();
 }
 
 void GameObjectManager::destroy()
 {
-	sharedInstance->gameObjectMap.clear();
-	sharedInstance->gameObjectList.clear();
-	delete sharedInstance;
+    if (sharedInstance != nullptr)
+        sharedInstance->release();
 }
 
-AGameObject* GameObjectManager::findObjectByName(std::string name)
+void GameObjectManager::addGameObject(AGameObject* gameObject)
 {
-	if (this->gameObjectMap[name] != nullptr) {
-		return this->gameObjectMap[name];
-	}
-	else {
-		std::cout << "Object does not exist";
-		return nullptr;
-	}
+    if (findObjectByName(gameObject->getName()) != nullptr) 
+    {
+        int count = 1;
+        std::string revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
+        while (findObjectByName(revisedString) != nullptr) 
+        {
+            count++;
+            revisedString = gameObject->getName() + " " + "(" + std::to_string(count) + ")";
+        }
+        gameObject->setName(revisedString);
+        gameObjectNames.push_back(revisedString);
+    }
+    else 
+    {
+        gameObjectNames.push_back(gameObject->getName());
+    }
+    gameObjectList.push_back(gameObject);
 }
 
-std::vector<AGameObject*>  GameObjectManager::getAllObjects()
+void GameObjectManager::updateAllGameObjects(float deltaTime)
 {
-	return this->gameObjectList;
+    for (int i = 0; i < gameObjectList.size(); i++)
+    {
+        gameObjectList[i]->update(deltaTime);
+    }
 }
 
-int GameObjectManager::activeObjects()
+void GameObjectManager::drawAllGameObjects(ConstantBuffer* cb)
 {
-	return this->gameObjectList.size();
+    for (int i = 0; i < gameObjectList.size(); i++)
+    {
+        gameObjectList[i]->draw(cb);
+    }
 }
 
-void GameObjectManager::updateAllObjects()
+std::vector<std::string> GameObjectManager::getGameObjectNames()
 {
-	for (int i = 0; i < this->gameObjectList.size(); i++) {
-			this->gameObjectList[i]->update(EngineTime::getDeltaTime());
-
-	}
+    return gameObjectNames;
 }
 
-void GameObjectManager::renderAllObjects(int width, int height)
+std::vector<AGameObject*> GameObjectManager::getAllObjects()
 {
-	for (int i = 0; i < this->gameObjectList.size(); i++) {
-
-			this->gameObjectList[i]->draw(width, height);
-
-	}
+    return gameObjectList;
 }
 
-void GameObjectManager::addObject(AGameObject* gameObject)
+void GameObjectManager::selectObject(int index)
 {
-	//used to generate the name of the objects so that they don't overlap
-	if (this->gameObjectMap[gameObject->getName()] != nullptr) {
-		int number = 1;
-		std::string newName = gameObject->getName() + std::to_string(number);
-		while (this->gameObjectMap[newName] != nullptr) {
-			number++;
-			newName = gameObject->getName() + std::to_string(number);
-		}
-		gameObject->name = newName;
-		this->gameObjectMap[newName] = gameObject;
-	}
-	else {
-		this->gameObjectMap[gameObject->getName()] = gameObject;
-	}
-	this->gameObjectList.push_back(gameObject);
+    selectedObject = gameObjectList[index];
 }
 
-void GameObjectManager::createObject(PrimitiveType type)
+void GameObjectManager::selectObject(AGameObject* gameObject)
 {
-	if (type == PrimitiveType::CUBE) {
-		Cube* cube = new Cube("Cube");
-		cube->setPosition(0.0f, 0.0f, 0.0f);
-		cube->setScale(1.0f, 1.0f, 1.0f);
-		this->addObject(cube);
-	}
-
-	if (type == PrimitiveType::PLANE) {
-		Plane* plane = new Plane("Plane", false);
-		plane->setScale(1.0f, 1.0f, 1.0f);
-		this->addObject(plane);
-	}
-	if(type == PrimitiveType::TEXTUREDCUBE)
-	{
-		TexturedCube* TCube = new TexturedCube("Textured Cube");
-		TCube->setPosition(0.0f, 0.0f, 0.0f);
-		TCube->setScale(1.0f, 1.0f, 1.0f);
-		this->addObject(TCube);
-	}
-	if(type == PrimitiveType::PHYSICSCUBE)
-	{
-		for (int i = 0; i < 20; i++) {
-			PhysicsCube* pCUbe = new PhysicsCube("pCube", false);
-			this->addObject(pCUbe);
-		}
-	}
-	if(type == PrimitiveType::PHYSICSPLANE)
-	{
-		PhysicsPlane* pPlane = new PhysicsPlane("pPlane", true);
-		this->addObject(pPlane);
-	}
+    selectedObject = gameObject;
 }
 
-void GameObjectManager::deleteObject(AGameObject* gameObject)
+void GameObjectManager::deleteObject(std::string objectName)
 {
-	this->gameObjectMap.erase(gameObject->getName());
-
-	int index = -1;
-	for (int i = 0; i < this->gameObjectList.size(); i++) {
-		if (this->gameObjectList[i] == gameObject) {
-			index = i;
-			break;
-		}
-	}
-
-	if (index != -1) {
-		this->gameObjectList.erase(this->gameObjectList.begin() + index);
-	}
-	else
-	{
-		std::cout << "Game Object does not exist";
-	}
-	delete gameObject;
-}
-
-void GameObjectManager::deleteObjectByName(std::string name)
-{
-	AGameObject* object = this->findObjectByName(name);
-
-	if (object != nullptr ) {
-		this->deleteObject(object);
-	}
-}
-
-void GameObjectManager::setSelectedObject(std::string name)
-{
-	if (this->gameObjectMap[name] != nullptr) {
-		this->setSelectedObject(this->gameObjectMap[name]);
-	}
-}
-
-void GameObjectManager::setSelectedObject(AGameObject* gameObject)
-{
-	this->selectedObject = gameObject;
-}
-
-void GameObjectManager::saveStates()
-{
-	for(int i = 0; i < gameObjectList.size(); i++)
-	{
-		if (this->gameObjectList[i]->stored == false) {
-			this->gameObjectList[i]->stored = true;
-			this->gameObjectList[i]->matrixchanged = true;
-			this->gameObjectList[i]->saveState();
-		}
-	}
-}
-
-void GameObjectManager::restoreStates()
-{
-	for (int i = 0; i < gameObjectList.size(); i++)
-	{
-		this->gameObjectList[i]->restoreState();
-		this->gameObjectList[i]->stored = false;
-	}
-}
-
-void GameObjectManager::applyStorageValues(Storage* storage)
-{
-	AGameObject* objectChange = this->findObjectByName(storage->getOwnerName());
-	if(objectChange != nullptr)
-	{
-		objectChange->setPosition(storage->getStoredPos());
-		objectChange->setScale(storage->gettStoredScale());
-		objectChange->setRotation(storage->getStoredRotation());
-		objectChange->setLocalMatrix(storage->getStoredMatrix().getMatrix());
-		
-	}
+    AGameObject* gameObject = findObjectByName(objectName);
+    if (gameObject != nullptr)
+        delete gameObject;
 }
 
 AGameObject* GameObjectManager::getSelectedObject()
 {
-	return this->selectedObject;
+    return selectedObject;
+}
+
+AGameObject* GameObjectManager::findObjectByName(std::string name)
+{
+    for (int i = 0; i < gameObjectNames.size(); i++)
+    {
+        if (gameObjectNames[i] == name)
+        {
+            return gameObjectList[i];
+        }
+    }
+    return nullptr;
+}
+
+void GameObjectManager::applyEditorAction(EditorAction* action, bool isUndo)
+{
+    AGameObject* object = this->findObjectByName(action->getOwnerName());
+    if (object != nullptr) 
+    {
+        ActionHistory::getInstance()->recordAction(object, isUndo);
+
+        object->setPosition(action->getStorePos());
+        object->setRotation(action->getStoredOrientation());
+        object->setScale(action->getStoredScale());
+    }
+}
+
+void GameObjectManager::saveStates()
+{
+    for(int i = 0; i < gameObjectList.size(); i ++)
+    {
+        this->gameObjectList[i]->saveEditState();
+    }
+}
+
+void GameObjectManager::restoreStates()
+{
+    for (int i = 0; i < gameObjectList.size(); i++)
+    {
+        this->gameObjectList[i]->restoreEditState();
+    }
 }
 
 GameObjectManager::GameObjectManager()
@@ -207,4 +143,17 @@ GameObjectManager::GameObjectManager()
 
 GameObjectManager::~GameObjectManager()
 {
+}
+
+void GameObjectManager::init()
+{
+}
+
+void GameObjectManager::release()
+{
+    for (int i = 0; i < gameObjectList.size(); i++)
+    {
+        delete gameObjectList[i];
+    }
+    gameObjectList.clear();
 }

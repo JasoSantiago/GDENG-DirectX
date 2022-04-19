@@ -2,32 +2,33 @@
 #include "PhysicsSystem.h"
 
 BaseComponentSystem* BaseComponentSystem::sharedInstance = nullptr;
+
 BaseComponentSystem* BaseComponentSystem::getInstance()
 {
-	return sharedInstance;
+    if (sharedInstance == nullptr)
+        BaseComponentSystem::initialize();
+    return sharedInstance;
 }
 
 void BaseComponentSystem::initialize()
 {
-	sharedInstance = new BaseComponentSystem();
+    sharedInstance = new BaseComponentSystem();
+    sharedInstance->physicsSystem = new PhysicsSystem();
 }
 
 void BaseComponentSystem::destroy()
 {
-	delete sharedInstance;
 }
 
 PhysicsSystem* BaseComponentSystem::getPhysicsSystem()
 {
-	return  physicsSystem;
+    return physicsSystem;
 }
 
 BaseComponentSystem::BaseComponentSystem()
 {
-	physicsSystem = new PhysicsSystem();
 }
 
 BaseComponentSystem::~BaseComponentSystem()
 {
-	delete this->physicsSystem;
 }

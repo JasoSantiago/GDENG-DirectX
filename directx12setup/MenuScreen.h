@@ -1,21 +1,19 @@
-
 #pragma once
 #include "AUIScreen.h"
+#include "IMGUI/imfilebrowser.h"
+
 class MenuScreen : public AUIScreen
 {
-private:
+public:
 	MenuScreen();
 	~MenuScreen();
 
+	// Inherited via AUIScreen
 	virtual void drawUI() override;
-	void OnCreateCubeClicked();
-	void OnCreatePlaneClicked();
-	void onCreateCreditsClicked();
-	void onCreateColorPicker();
-	void onCreateTexturedCubeClicked();
-	void onCreatePhysicsCubeClicked();
-	void onCreatePhysicsPlaneClicked();
-	friend class UIManager;
 
-	bool isOpen = false;
+private:
+
+	ImGui::FileBrowser* saveSceneDialog;
+	ImGui::FileBrowser* openSceneDialog;
 };
+
